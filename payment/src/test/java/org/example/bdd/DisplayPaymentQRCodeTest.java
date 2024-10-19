@@ -4,11 +4,20 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
+
+import io.restassured.response.Response;
+import io.restassured.response.ValidatableResponse;
+import io.restassured.RestAssured;
+
 // Funcionalidade: Exibir código de pagamento
 public class DisplayPaymentQRCodeTest {
+    private Response response;
+
     @Given("o usuário acessa a página de pagamento")
-    public void o_usuario_acessa_a_pagina_de_pagamento() {
+    public Response o_usuario_acessa_a_pagina_de_pagamento() {
         System.out.println("o usuário acessa a página de pagamento");
+        response = RestAssured.given().get("http://localhost:8080/payment/1234/init");
+        return response;
     }
 
     @When("o código QR para pagamento é gerado")
