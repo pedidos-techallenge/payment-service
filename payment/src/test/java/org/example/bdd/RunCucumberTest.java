@@ -1,4 +1,4 @@
-package org.example;
+package org.example.bdd;
 
 import org.junit.platform.suite.api.IncludeEngines;
 import org.junit.platform.suite.api.SelectClasspathResource;
