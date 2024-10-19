@@ -4,14 +4,6 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
-/*
-    Client -[request code]-> Server
-    Server -[generate code]-> Gateway
-        Gateway -[return code]-> Server
-            Server -[return code]-> Client
-        Gateway -[error]-> Server
-            Server -[return error]-> Client
-* */
 import io.restassured.response.Response;
 import io.restassured.response.ValidatableResponse;
 import io.restassured.RestAssured;
