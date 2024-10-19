@@ -1,4 +1,4 @@
-package org.example.bdd;
+package br.com.fiap.techchallenge.payment.bdd;
 
 import org.junit.platform.suite.api.IncludeEngines;
 import org.junit.platform.suite.api.SelectClasspathResource;

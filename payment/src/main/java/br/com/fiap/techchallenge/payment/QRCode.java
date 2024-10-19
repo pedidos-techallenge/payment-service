@@ -1,4 +1,4 @@
-package org.example;
+package br.com.fiap.techchallenge.payment;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
