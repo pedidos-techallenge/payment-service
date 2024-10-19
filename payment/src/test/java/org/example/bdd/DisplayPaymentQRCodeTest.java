@@ -16,7 +16,7 @@ public class DisplayPaymentQRCodeTest {
     @Given("o usuário acessa a página de pagamento")
     public Response o_usuario_acessa_a_pagina_de_pagamento() {
         System.out.println("o usuário acessa a página de pagamento");
-        response = RestAssured.given().get("http://localhost:8080/payment/1234/init");
+        response = RestAssured.given().get("http://localhost:8080/v1/payment/1234/init");
         return response;
     }
 
