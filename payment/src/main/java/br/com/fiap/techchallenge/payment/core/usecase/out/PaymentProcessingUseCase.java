@@ -11,7 +11,7 @@ public class PaymentProcessingUseCase implements IPaymentProcessingUseCase {
     }
 
     @Override
-    public void processPayment(String orderId) {
-        this.paymentGateway.processQRCodePayment(orderId);
+    public String processPayment(String orderId) {
+        return this.paymentGateway.processQRCodePayment(orderId);
     }
 }

@@ -3,16 +3,12 @@
 
 Funcionalidade: Solicitação de código para pagamento
 
-  Cenário: Solicitação de código QR para pagamento
-    Dado um código QR para pagamento foi solicitado
-    Então a geração de código deve ser solicitada para o gateway de pagamento
-
   Cenário: Código de pagamento é gerado com sucesso
-    Dado um código QR para pagamento foi solicitado
+    Dado um código QR para pagamento foi solicitado para o pedido 1234
     Quando o código QR para pagamento foi gerado com sucesso
     Então o código de pagamento deve ser retornado
 
   Cenário: Erro na geração do código de pagamento
-    Dado um código QR para pagamento foi solicitado
+    Dado um código QR para pagamento foi solicitado para o pedido 4321
     Quando não foi possível gerar o código QR para pagamento
     Então uma mensagem de erro deve ser retornada

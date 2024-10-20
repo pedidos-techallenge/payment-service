@@ -9,7 +9,7 @@ public class PaymentProcessingController {
         this.paymentProcessingUseCase = paymentProcessingUseCase;
     }
 
-    public void processPayment(String orderId) {
-        paymentProcessingUseCase.processPayment(orderId);
+    public String processPayment(String orderId) {
+        return paymentProcessingUseCase.processPayment(orderId);
     }
 }
