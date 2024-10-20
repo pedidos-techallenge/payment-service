@@ -10,6 +10,6 @@ public class MockLocalPaymentGateway implements IPaymentGateway {
     @Override
     public String processQRCodePayment(String orderId) {
         System.out.println("Processing payment for order: " + orderId);
-        return "QR_CODE=99999";
+        return "MOCK_QR_CODE=99999";
     }
 }

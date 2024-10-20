@@ -1,12 +1,10 @@
 package br.com.fiap.techchallenge.payment.infrastructure.api;
 
 import br.com.fiap.techchallenge.payment.adapters.controllers.PaymentProcessingController;
+import br.com.fiap.techchallenge.payment.infrastructure.dto.OrderRequestDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("v1/payment")
@@ -18,9 +16,9 @@ public class PaymentProcessingService {
     }
 
 
-    @GetMapping("{orderId}/init")
-    public ResponseEntity<?> getPaymentCode(@PathVariable String orderId) {
-        this.paymentProcessingController.processPayment(orderId);
+    @PostMapping("init")
+    public ResponseEntity<?> getPaymentCode(@RequestBody OrderRequestDTO orderRequest) {
+        this.paymentProcessingController.processPayment(orderRequest.orderId());
         return new ResponseEntity<>("0001", HttpStatus.OK);
     }
 }
