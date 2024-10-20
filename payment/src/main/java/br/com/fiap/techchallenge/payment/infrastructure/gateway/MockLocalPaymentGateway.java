@@ -5,11 +5,11 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 @Service
-@Profile("prod")
-public class LocalPaymentGateway implements IPaymentGateway {
+@Profile("test")
+public class MockLocalPaymentGateway implements IPaymentGateway {
     @Override
     public String processQRCodePayment(String orderId) {
-//        System.out.println("Processing payment for order: " + orderId);
-        return "QR_CODE=12345_67890";
+        System.out.println("Processing payment for order: " + orderId);
+        return "QR_CODE=99999";
     }
 }

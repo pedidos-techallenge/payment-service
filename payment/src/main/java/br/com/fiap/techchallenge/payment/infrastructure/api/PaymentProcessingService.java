@@ -20,6 +20,7 @@ public class PaymentProcessingService {
 
     @GetMapping("{orderId}/init")
     public ResponseEntity<?> getPaymentCode(@PathVariable String orderId) {
-            return new ResponseEntity<>("0001", HttpStatus.OK);
+        this.paymentProcessingController.processPayment(orderId);
+        return new ResponseEntity<>("0001", HttpStatus.OK);
     }
 }
