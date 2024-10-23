@@ -1,4 +1,4 @@
-package br.com.fiap.techchallenge.payment.bdd;
+package bdd;
 
 import io.cucumber.java.pt.Dado;
 import io.cucumber.java.pt.Então;
