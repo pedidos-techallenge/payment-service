@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "QRCodeResponse",
+  "type": "object",
+  "properties": {
+    "qrCode": {
+      "type": "string"
+    },
+    "orderID": {
+      "type": "string"
+    }
+  }
+}
