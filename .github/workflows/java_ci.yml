@@ -1,0 +1,22 @@
+name: Java CI
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+
+  steps:
+    - uses: actions/checkout@v4
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+
+    - name: Build with Maven
+      working-directory: ./payment
+      run: mvn --batch-mode --update-snapshots verify
+
