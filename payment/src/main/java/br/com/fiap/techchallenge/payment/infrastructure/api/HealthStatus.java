@@ -12,9 +12,4 @@ public class HealthStatus {
         public String health() {
             return "OK";
         }
-
-        @RequestMapping("/ready")
-        public String ready() {
-            return "OK";
-        }
 }
