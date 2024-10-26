@@ -1,0 +1,1 @@
+![build](https://github.com/pedidos-techallenge/payment-service/actions/workflows/java_ci.yml/badge.svg)
