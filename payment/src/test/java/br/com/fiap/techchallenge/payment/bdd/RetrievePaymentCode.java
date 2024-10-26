@@ -1,22 +1,42 @@
-package bdd;
+package br.com.fiap.techchallenge.payment.bdd;
 
+import io.cucumber.java.Before;
 import io.cucumber.java.pt.Dado;
 import io.cucumber.java.pt.Então;
 import io.cucumber.java.pt.Quando;
-import io.restassured.response.Response;
+import io.cucumber.spring.CucumberContextConfiguration;
 import io.restassured.RestAssured;
 import io.restassured.module.jsv.JsonSchemaValidator;
+import io.restassured.response.Response;
+import org.junit.runner.RunWith;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.hamcrest.Matchers.equalTo;
 
-// Funcionalidade: Exibir código de pagamento
+@CucumberContextConfiguration
+@RunWith(SpringRunner.class)
+@ActiveProfiles("test")
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 public class RetrievePaymentCode {
 
-    private static final String ENDPOINT="http://localhost:8080/v1/payment/init";
+    //    private static final String ENDPOINT="http://localhost:8080/v1/payment/init";
+    private static final String ENDPOINT="/v1/payment/init";
 
     private Response response;
+
+    @LocalServerPort
+    private int port;
+
+    @Before
+    public void setup() {
+        RestAssured.port = port;
+    }
 
     @Dado("um código QR para pagamento foi solicitado para o pedido {int}")
     public void qrd_code_requested(int orderId) {
@@ -60,3 +80,5 @@ public class RetrievePaymentCode {
         System.out.println("uma mensagem de erro é retornada para o usuário");
     }
 }
+
+// Funcionalidade: Exibir código de pagamento
