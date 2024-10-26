@@ -25,7 +25,7 @@ jobs:
         run: mvn -B package
 
       - name: Save Coverage Report
-        uses: 'actions/upload-artifact@v2'
+        uses: 'actions/upload-artifact@v4'
         with:
           name: jacoco-report
           path: '#{{github.workspace}}/payment/target/site/jacoco/jacoco.xml'
