@@ -3,8 +3,6 @@ package br.com.fiap.techchallenge.payment.infrastructure.api;
 import br.com.fiap.techchallenge.payment.adapters.controllers.PaymentProcessingController;
 import br.com.fiap.techchallenge.payment.infrastructure.dto.OrderRequestDTO;
 import br.com.fiap.techchallenge.payment.infrastructure.dto.QRCodeResponseDTO;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
