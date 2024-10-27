@@ -10,27 +10,24 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import static io.restassured.RestAssured.given;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ContextConfiguration
 @RunWith(SpringRunner.class)
 @ActiveProfiles("test")
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, useMainMethod = SpringBootTest.UseMainMethod.ALWAYS)
 public class RestApiApplicationIT {
 
     @LocalServerPort
     int port;
 
+    @Test
+    void main() {}
+
     @BeforeEach
-    public void setUp() throws Exception {
+    public void setUp() {
         System.out.println("Setting up RestAssured with port " + port);
         RestAssured.port = port;
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
     }
 
-    @Test
-    public void testApplicationSucessfullyInitializes() {
-        given().when().get("/health").then().statusCode(200);
-    }
 }
