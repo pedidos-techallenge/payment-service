@@ -12,3 +12,5 @@ Funcionalidade: Solicitação de código para pagamento
     Dado um código QR para pagamento foi solicitado para o pedido 4321
     Quando não foi possível gerar o código QR para pagamento
     Então uma mensagem de erro deve ser retornada
+
+    # TODO: Adicionar validação para verificar se o pagamento foi registrado
