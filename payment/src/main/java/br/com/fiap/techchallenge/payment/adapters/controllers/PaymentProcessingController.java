@@ -12,4 +12,8 @@ public class PaymentProcessingController {
     public String processPayment(String orderId) {
         return paymentProcessingUseCase.processPayment(orderId);
     }
+
+    public String getPaymentStatus(String orderId) {
+        return this.paymentProcessingUseCase.getPaymentStatus(orderId);
+    }
 }

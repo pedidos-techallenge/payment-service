@@ -2,6 +2,7 @@ package br.com.fiap.techchallenge.payment.infrastructure.api;
 
 import br.com.fiap.techchallenge.payment.adapters.controllers.PaymentProcessingController;
 import br.com.fiap.techchallenge.payment.infrastructure.dto.OrderRequestDTO;
+import br.com.fiap.techchallenge.payment.infrastructure.dto.PaymentStatusDTO;
 import br.com.fiap.techchallenge.payment.infrastructure.dto.QRCodeResponseDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -89,4 +90,14 @@ public class PaymentProcessingServiceTest {
         assertEquals("Erro ao gerar código de pagamento", actualQRCodeResponse);
         verify(paymentProcessingController, times(1)).processPayment(orderId);
     }
+
+    @Test
+    void getPaymentStatus() {
+        String orderId = "1234";
+        when(paymentProcessingController.getPaymentStatus(orderId)).thenReturn("PENDING");
+        PaymentStatusDTO paymentStatus = (PaymentStatusDTO) paymentProcessingService.getPaymentStatus(orderId).getBody();
+        assertEquals(paymentStatus.orderId(), orderId);
+        assertEquals(paymentStatus.orderStatus(), "PENDING");
+    }
 }
+

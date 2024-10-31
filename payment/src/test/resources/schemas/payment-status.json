@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "payment-status",
+  "type": "object",
+  "properties": {
+    "orderStatus": {
+      "type": "string",
+      "enum": [
+          "APPROVED"
+        , "REJECTED"
+        , "PENDING"
+      ]
+
+    },
+    "orderID": {
+      "type": "string"
+    }
+  }
+}

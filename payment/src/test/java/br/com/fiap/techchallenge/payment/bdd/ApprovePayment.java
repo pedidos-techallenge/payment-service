@@ -4,20 +4,14 @@ import io.cucumber.java.Before;
 import io.cucumber.java.pt.Dado;
 import io.cucumber.java.pt.Então;
 import io.cucumber.java.pt.Quando;
-import io.cucumber.spring.CucumberContextConfiguration;
 import io.restassured.RestAssured;
 import io.restassured.module.jsv.JsonSchemaValidator;
 import io.restassured.response.Response;
 import org.junit.runner.RunWith;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
-@CucumberContextConfiguration
 @RunWith(SpringRunner.class)
-@ActiveProfiles("test")
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 public class ApprovePayment {
     private static final String ENDPOINT="/v1/payment/approval";
 
@@ -74,7 +68,9 @@ public class ApprovePayment {
 
     @Quando("a ordem de pagamento não foi encontrada")
     public void payment_not_found() {
-        // Check payment status
+        response.then()
+                .statusCode(404)
+                .body(JsonSchemaValidator.matchesJsonSchemaInClasspath("schemas/payment-not-found.json"));
     }
 
     @Então("uma mensagem de erro deve ser registrada nos logs")

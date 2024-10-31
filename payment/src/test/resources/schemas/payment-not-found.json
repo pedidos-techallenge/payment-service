@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "payment-approval",
+  "type": "object",
+  "properties": {
+    "orderStatus": {
+      "type": "string",
+        "enum": [
+            "NOT FOUND"
+        ]
+
+    },
+    "orderID": {
+      "type": "string"
+    }
+  }
+}

@@ -1,6 +1,7 @@
 package br.com.fiap.techchallenge.payment.core.usecase.out;
 
 import br.com.fiap.techchallenge.payment.adapters.gateways.IPaymentGateway;
+import br.com.fiap.techchallenge.payment.adapters.gateways.IPaymentRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -14,12 +15,15 @@ public class PaymentProcessingUseCaseTest {
     @Mock
     private IPaymentGateway paymentGateway;
 
+    @Mock
+    private IPaymentRepository paymentRepository;
+
     private PaymentProcessingUseCase paymentProcessingUseCase;
 
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
-        paymentProcessingUseCase = new PaymentProcessingUseCase(paymentGateway);
+        paymentProcessingUseCase = new PaymentProcessingUseCase(paymentGateway, paymentRepository);
     }
 
     @Test
@@ -66,5 +70,18 @@ public class PaymentProcessingUseCaseTest {
 
         assertNull(actualQRCode);
         verify(paymentGateway, times(1)).processQRCodePayment(orderId);
+    }
+
+    @Test
+    void getPaymentStatusReturnsStatus() {
+        String orderId = "1234";
+        String expectedStatus = "PENDING";
+
+        when(paymentRepository.getPaymentStatus(orderId)).thenReturn(expectedStatus);
+
+        String actualStatus = paymentProcessingUseCase.getPaymentStatus(orderId);
+
+        assertEquals(expectedStatus, actualStatus);
+        verify(paymentRepository, times(1)).getPaymentStatus(orderId);
     }
 }
