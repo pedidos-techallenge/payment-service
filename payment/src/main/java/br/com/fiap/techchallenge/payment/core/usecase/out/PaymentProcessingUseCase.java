@@ -22,4 +22,27 @@ public class PaymentProcessingUseCase implements IPaymentProcessingUseCase {
     public String getPaymentStatus(String orderId) {
         return paymentRepository.getPaymentStatus(orderId);
     }
+
+    @Override
+    public void createPayment(String orderId) {
+        paymentRepository.createPayment(orderId);
+    }
+
+    @Override
+    public void approvePayment(String orderId, String orderStatus) {
+        if(getPaymentStatus(orderId).equals("PENDING")) {
+            paymentRepository.setPaymentStatus(orderId, orderStatus);
+        }
+
+    }
+
+    @Override
+    public String getQRCode(String orderId) {
+        String qrCode = paymentRepository.getPaymentQRCode(orderId);
+        if (qrCode == null) {
+            qrCode = paymentGateway.processQRCodePayment(orderId);
+            paymentRepository.setPaymentStatus(orderId, "PENDING", qrCode);
+        }
+        return qrCode;
+    }
 }

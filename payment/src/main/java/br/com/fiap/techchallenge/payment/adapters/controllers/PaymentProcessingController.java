@@ -16,4 +16,16 @@ public class PaymentProcessingController {
     public String getPaymentStatus(String orderId) {
         return this.paymentProcessingUseCase.getPaymentStatus(orderId);
     }
+
+    public void createPayment(String orderId) {
+        paymentProcessingUseCase.createPayment(orderId);
+    }
+
+    public void approvePayment(String orderId, String orderStatus) {
+        paymentProcessingUseCase.approvePayment(orderId, orderStatus);
+    }
+
+    public String getQRCode(String orderId) {
+        return paymentProcessingUseCase.getQRCode(orderId);
+    }
 }

@@ -17,13 +17,36 @@ public class PaymentProcessingService {
         this.paymentProcessingController = paymentProcessingController;
     }
 
-    @PostMapping("init")
-    public ResponseEntity<?> getPaymentCode(@RequestBody OrderRequestDTO orderRequest) {
+    @PostMapping("new")
+    public ResponseEntity<?> createPayment(@RequestBody OrderRequestDTO orderRequest) {
         try {
-            String qrCode = this.paymentProcessingController.processPayment(orderRequest.orderId());
-            return new ResponseEntity<>(new QRCodeResponseDTO(orderRequest.orderId(), qrCode), HttpStatus.OK);
+            this.paymentProcessingController.createPayment(orderRequest.orderId());
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (RuntimeException e) {
-            return new ResponseEntity<>("Erro ao gerar código de pagamento", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Erro ao criar pagamento", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping("approve")
+    public ResponseEntity<?> approvePayment(@RequestBody OrderRequestDTO orderRequest) {
+        try {
+            this.paymentProcessingController.approvePayment(orderRequest.orderId(), orderRequest.orderStatus());
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>("Erro ao aprovar pagamento", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("qrCode/{orderId}")
+    public ResponseEntity<?> getQRCode(@PathVariable String orderId) {
+        try {
+            String qrCode = this.paymentProcessingController.getQRCode(orderId);
+            if (qrCode == null) {
+                return new ResponseEntity<>("Código de pagamento não encontrado", HttpStatus.NOT_FOUND);
+            }
+            return new ResponseEntity<>(new QRCodeResponseDTO(orderId, qrCode), HttpStatus.OK);
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>("Erro ao buscar código de pagamento", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
