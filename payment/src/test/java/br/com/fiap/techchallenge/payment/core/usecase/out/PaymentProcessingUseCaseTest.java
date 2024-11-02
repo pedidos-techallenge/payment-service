@@ -27,53 +27,53 @@ public class PaymentProcessingUseCaseTest {
     }
 
     @Test
-    void processPaymentReturnsQRCode() {
+    void testGetQrCodeReturnsQRCode() {
         String orderId = "order123";
         String expectedQRCode = "QR_CODE_12345";
 
         when(paymentGateway.processQRCodePayment(orderId)).thenReturn(expectedQRCode);
 
-        String actualQRCode = paymentProcessingUseCase.processPayment(orderId);
+        String actualQRCode = paymentProcessingUseCase.getQRCode(orderId);
 
         assertEquals(expectedQRCode, actualQRCode);
         verify(paymentGateway, times(1)).processQRCodePayment(orderId);
     }
 
     @Test
-    void processPaymentHandlesNullOrderId() {
+    void testGetQrCodeHandlesNullOrderId() {
         String orderId = null;
 
         when(paymentGateway.processQRCodePayment(orderId)).thenReturn(null);
-        String actualQRCode = paymentProcessingUseCase.processPayment(orderId);
+        String actualQRCode = paymentProcessingUseCase.getQRCode(orderId);
 
         assertNull(actualQRCode);
         verify(paymentGateway, times(1)).processQRCodePayment(orderId);
     }
 
     @Test
-    void processPaymentHandlesEmptyOrderId() {
+    void testGetQrCodeHandlesEmptyOrderId() {
         String orderId = "";
 
         when(paymentGateway.processQRCodePayment(orderId)).thenReturn(null);
-        String actualQRCode = paymentProcessingUseCase.processPayment(orderId);
+        String actualQRCode = paymentProcessingUseCase.getQRCode(orderId);
 
         assertNull(actualQRCode);
         verify(paymentGateway, times(1)).processQRCodePayment(orderId);
     }
 
     @Test
-    void processPaymentHandlesInvalidOrderId() {
+    void testGetQrCodeHandlesInvalidOrderId() {
         String orderId = "invalid_order";
 
         when(paymentGateway.processQRCodePayment(orderId)).thenReturn(null);
-        String actualQRCode = paymentProcessingUseCase.processPayment(orderId);
+        String actualQRCode = paymentProcessingUseCase.getQRCode(orderId);
 
         assertNull(actualQRCode);
         verify(paymentGateway, times(1)).processQRCodePayment(orderId);
     }
 
     @Test
-    void getPaymentStatusReturnsStatus() {
+    void testGetQrCodeStatusReturnsStatus() {
         String orderId = "1234";
         String expectedStatus = "PENDING";
 

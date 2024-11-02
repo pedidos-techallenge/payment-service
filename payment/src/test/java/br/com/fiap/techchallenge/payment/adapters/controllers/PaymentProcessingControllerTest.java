@@ -25,51 +25,51 @@ public class PaymentProcessingControllerTest {
     }
 
     @Test
-    void processPaymentReturnsQRCode() {
+    void testGetQrCodeReturnsQRCode() {
         String orderId = "order123";
         String expectedQRCode = "QR_CODE_12345";
 
-        when(paymentProcessingUseCase.processPayment(orderId)).thenReturn(expectedQRCode);
+        when(paymentProcessingUseCase.getQRCode(orderId)).thenReturn(expectedQRCode);
 
-        String actualQRCode = paymentProcessingController.processPayment(orderId);
+        String actualQRCode = paymentProcessingController.getQRCode(orderId);
 
         assertEquals(expectedQRCode, actualQRCode);
-        verify(paymentProcessingUseCase, times(1)).processPayment(orderId);
+        verify(paymentProcessingUseCase, times(1)).getQRCode(orderId);
     }
 
     @Test
-    void processPaymentHandlesNullOrderId() {
+    void testGetQrCodeHandlesNullOrderId() {
         String orderId = null;
 
-        when(paymentProcessingUseCase.processPayment(orderId)).thenReturn(null);
+        when(paymentProcessingUseCase.getQRCode(orderId)).thenReturn(null);
 
-        String actualQRCode = paymentProcessingController.processPayment(orderId);
+        String actualQRCode = paymentProcessingController.getQRCode(orderId);
 
         assertNull(actualQRCode);
-        verify(paymentProcessingUseCase, times(1)).processPayment(orderId);
+        verify(paymentProcessingUseCase, times(1)).getQRCode(orderId);
     }
 
     @Test
-    void processPaymentHandlesEmptyOrderId() {
+    void testGetQrCodeHandlesEmptyOrderId() {
         String orderId = "";
 
-        when(paymentProcessingUseCase.processPayment(orderId)).thenReturn(null);
+        when(paymentProcessingUseCase.getQRCode(orderId)).thenReturn(null);
 
-        String actualQRCode = paymentProcessingController.processPayment(orderId);
+        String actualQRCode = paymentProcessingController.getQRCode(orderId);
 
         assertNull(actualQRCode);
-        verify(paymentProcessingUseCase, times(1)).processPayment(orderId);
+        verify(paymentProcessingUseCase, times(1)).getQRCode(orderId);
     }
 
     @Test
-    void processPaymentHandlesInvalidOrderId() {
+    void testGetQrCodeHandlesInvalidOrderId() {
         String orderId = "invalid_order_id";
 
-        when(paymentProcessingUseCase.processPayment(orderId)).thenReturn(null);
+        when(paymentProcessingUseCase.getQRCode(orderId)).thenReturn(null);
 
-        String actualQRCode = paymentProcessingController.processPayment(orderId);
+        String actualQRCode = paymentProcessingController.getQRCode(orderId);
 
         assertNull(actualQRCode);
-        verify(paymentProcessingUseCase, times(1)).processPayment(orderId);
+        verify(paymentProcessingUseCase, times(1)).getQRCode(orderId);
     }
 }

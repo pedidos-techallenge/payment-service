@@ -9,10 +9,6 @@ public class PaymentProcessingController {
         this.paymentProcessingUseCase = paymentProcessingUseCase;
     }
 
-    public String processPayment(String orderId) {
-        return paymentProcessingUseCase.processPayment(orderId);
-    }
-
     public String getPaymentStatus(String orderId) {
         return this.paymentProcessingUseCase.getPaymentStatus(orderId);
     }
