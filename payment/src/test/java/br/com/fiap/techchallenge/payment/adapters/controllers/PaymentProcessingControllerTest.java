@@ -25,6 +25,33 @@ public class PaymentProcessingControllerTest {
     }
 
     @Test
+    void testGetPaymentStatusReturnsStatus() {
+        String orderId = "1234";
+        String expectedStatus = "PENDING";
+        when(paymentProcessingUseCase.getPaymentStatus(orderId)).thenReturn(expectedStatus);
+
+        String returnedStatus = paymentProcessingController.getPaymentStatus(orderId);
+
+        assertEquals(expectedStatus, returnedStatus);
+        verify(paymentProcessingUseCase, times(1)).getPaymentStatus(orderId);
+    }
+
+
+    @Test
+    void testCreatePaymentCallsCorrectUseCase() {
+        String orderId = "1234";
+        paymentProcessingController.createPayment(orderId);
+        verify(paymentProcessingUseCase, times(1)).createPayment(orderId);
+    }
+
+    @Test
+    void testApprovePaymentCallsCorrectUseCase() {
+        String orderId = "1234";
+        paymentProcessingController.approvePayment(orderId, "APPROVED");
+        verify(paymentProcessingUseCase, times(1)).approvePayment(orderId, "APPROVED");
+    }
+
+    @Test
     void testGetQrCodeReturnsQRCode() {
         String orderId = "order123";
         String expectedQRCode = "QR_CODE_12345";

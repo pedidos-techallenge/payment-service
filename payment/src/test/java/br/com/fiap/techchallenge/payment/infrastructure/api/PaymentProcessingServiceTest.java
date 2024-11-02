@@ -26,6 +26,52 @@ public class PaymentProcessingServiceTest {
     }
 
     @Test
+    void testCreatePaymentReturnsOKWhenSucessfull() {
+        String orderId = "1234";
+        OrderRequestDTO orderRequestDTO = new OrderRequestDTO(orderId, null);
+
+        int responseStatus = paymentProcessingService.createPayment(orderRequestDTO).getStatusCode().value();
+
+        assertEquals(200, responseStatus);
+        verify(paymentProcessingController, times(1)).createPayment(orderId);
+    }
+
+    @Test
+    void testCreatePaymentReturns500WhenUnsucessfull() {
+        String orderId = "1234";
+        OrderRequestDTO orderRequestDTO = new OrderRequestDTO(orderId, null);
+
+        doThrow(new RuntimeException()).when(paymentProcessingController).createPayment(orderId);
+        int responseStatus = paymentProcessingService.createPayment(orderRequestDTO).getStatusCode().value();
+
+        assertEquals(500, responseStatus);
+        verify(paymentProcessingController, times(1)).createPayment(orderId);
+    }
+
+    @Test
+    void testApprovePaymentReturnsOKWhenSucessfull() {
+        String orderId = "1234";
+        OrderRequestDTO orderRequestDTO = new OrderRequestDTO(orderId, "APPROVED");
+
+        int responseStatus = paymentProcessingService.approvePayment(orderRequestDTO).getStatusCode().value();
+
+        assertEquals(200, responseStatus);
+        verify(paymentProcessingController, times(1)).approvePayment(orderId, "APPROVED");
+    }
+
+    @Test
+    void testApprovePaymentReturns500WhenUnsucessfull() {
+        String orderId = "1234";
+        OrderRequestDTO orderRequestDTO = new OrderRequestDTO(orderId, "APPROVED");
+
+        doThrow(new RuntimeException()).when(paymentProcessingController).approvePayment(orderId, "APPROVED");
+        int responseStatus = paymentProcessingService.approvePayment(orderRequestDTO).getStatusCode().value();
+
+        assertEquals(500, responseStatus);
+        verify(paymentProcessingController, times(1)).approvePayment(orderId, "APPROVED");
+    }
+
+    @Test
     void testGetQRCodeReturnsCodeSucessfully() {
         String orderId = "1234";
         String expectedQRCode = "QR_CODE_12345";
@@ -53,21 +99,8 @@ public class PaymentProcessingServiceTest {
     }
 
     @Test
-    void testGetQRCodeHandlesEmptyOrderId() {
-        String orderId = "";
-
-        when(paymentProcessingController
-                .getQRCode(orderId))
-                .thenReturn(null);
-        int responseStatus = paymentProcessingService.getQRCode(orderId).getStatusCode().value();
-
-        assertEquals(404, responseStatus);
-        verify(paymentProcessingController, times(1)).getQRCode(orderId);
-    }
-
-    @Test
     void testGetQRCodeHandlesInvalidOrderId() {
-        String orderId = "invalid_order";
+        String orderId = "";
 
         when(paymentProcessingController
                 .getQRCode(orderId))
@@ -90,12 +123,49 @@ public class PaymentProcessingServiceTest {
     }
 
     @Test
-    void testGetPaymentStatus() {
+    void testGetPaymentStatusReturnsStatusSuccessfully() {
         String orderId = "1234";
         when(paymentProcessingController.getPaymentStatus(orderId)).thenReturn("PENDING");
         PaymentStatusDTO paymentStatus = (PaymentStatusDTO) paymentProcessingService.getPaymentStatus(orderId).getBody();
         assertEquals(paymentStatus.orderId(), orderId);
         assertEquals(paymentStatus.orderStatus(), "PENDING");
+    }
+
+    @Test
+    void testGetPaymentStatusHandlesNullOrderId() {
+        String orderId = null;
+
+        when(paymentProcessingController
+                .getPaymentStatus(orderId))
+                .thenReturn(null);
+        int responseStatus = paymentProcessingService.getPaymentStatus(orderId).getStatusCode().value();
+
+        assertEquals(404, responseStatus);
+        verify(paymentProcessingController, times(1)).getPaymentStatus(orderId);
+    }
+
+    @Test
+    void testGetPaymentStatusHandlesInvalidOrderId() {
+        String orderId = "";
+
+        when(paymentProcessingController
+                .getPaymentStatus(orderId))
+                .thenReturn(null);
+        int responseStatus = paymentProcessingService.getPaymentStatus(orderId).getStatusCode().value();
+
+        assertEquals(404, responseStatus);
+        verify(paymentProcessingController, times(1)).getPaymentStatus(orderId);
+    }
+
+    @Test
+    void testGetPaymentStatusHandlesInternalServerError() {
+        String orderId = "1234";
+
+        when(paymentProcessingController.getPaymentStatus(orderId)).thenThrow(new RuntimeException());
+        int responseStatus = paymentProcessingService.getPaymentStatus(orderId).getStatusCode().value();
+
+        assertEquals(500, responseStatus);
+        verify(paymentProcessingController, times(1)).getPaymentStatus(orderId);
     }
 }
 
