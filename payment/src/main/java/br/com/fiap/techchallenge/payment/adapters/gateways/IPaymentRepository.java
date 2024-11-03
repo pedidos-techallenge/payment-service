@@ -1,13 +1,11 @@
 package br.com.fiap.techchallenge.payment.adapters.gateways;
 
+import br.com.fiap.techchallenge.payment.core.usecase.entities.OrderPayment;
+
 public interface IPaymentRepository {
-    void createPayment(String orderId);
+    void createPayment(OrderPayment orderPayment);
 
-    void setPaymentStatus(String orderId, String status);
+    void updatePayment(OrderPayment orderPayment);
 
-    void setPaymentStatus(String orderId, String status, String qrCode);
-
-    String getPaymentStatus(String orderId);
-
-    String getPaymentQRCode(String orderId);
+    OrderPayment getPayment(String orderId);
 }

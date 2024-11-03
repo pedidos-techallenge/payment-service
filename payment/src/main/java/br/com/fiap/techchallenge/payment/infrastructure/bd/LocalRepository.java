@@ -1,6 +1,8 @@
 package br.com.fiap.techchallenge.payment.infrastructure.bd;
 
 import br.com.fiap.techchallenge.payment.adapters.gateways.IPaymentRepository;
+import br.com.fiap.techchallenge.payment.core.usecase.entities.OrderPayment;
+import br.com.fiap.techchallenge.payment.core.usecase.entities.OrderStatus;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -13,65 +15,24 @@ public class LocalRepository implements IPaymentRepository {
     private record Payment(String orderId, String status, String qrCode) {}
 
     @Override
-    public void createPayment(String orderId){
-        payments.add(new Payment(orderId, "CREATED", null));
+    public void createPayment(OrderPayment orderPayment){
+        payments.add(new Payment(orderPayment.getOrderId(), orderPayment.getOrderStatus().name(), orderPayment.getQrCode()));
     }
 
-
     @Override
-    public void setPaymentStatus(String orderId, String status) {
-        if (orderId == null) {
-            throw new IllegalArgumentException("Order ID cannot be null");
-        }
-        if (status == null) {
-            throw new IllegalArgumentException("Status cannot be null");
-        }
+    public void updatePayment(OrderPayment orderPayment) {
         for (int i = 0; i < payments.size(); i++) {
-            if (payments.get(i).orderId.equals(orderId)) {
-                payments.set(i, new Payment(orderId, status, payments.get(i).qrCode));
+            if (payments.get(i).orderId.equals(orderPayment.getOrderId())) {
+                payments.set(i, new Payment(orderPayment.getOrderId(), orderPayment.getOrderStatus().name(), orderPayment.getQrCode()));
             }
         }
     }
 
     @Override
-    public void setPaymentStatus(String orderId, String status, String qrCode) {
-        if (orderId == null) {
-            throw new IllegalArgumentException("Order ID cannot be null");
-        }
-        if (status == null) {
-            throw new IllegalArgumentException("Status cannot be null");
-        }
-        if (qrCode == null) {
-            throw new IllegalArgumentException("QRCode cannot be null");
-        }
-        for (int i = 0; i < payments.size(); i++) {
-            if (payments.get(i).orderId.equals(orderId)) {
-                payments.set(i, new Payment(orderId, status, qrCode));
-            }
-        }
-    }
-
-    @Override
-    public String getPaymentStatus(String orderId) {
-        if (orderId == null) {
-            throw new IllegalArgumentException("Order ID cannot be null");
-        }
+    public OrderPayment getPayment(String orderId) {
         for (Payment payment : payments) {
             if (payment.orderId.equals(orderId)) {
-                return payment.status;
-            }
-        }
-        return null;
-    }
-
-    @Override
-    public String getPaymentQRCode(String orderId) {
-        if (orderId == null) {
-            throw new IllegalArgumentException("Order ID cannot be null");
-        }
-        for (Payment payment : payments) {
-            if (payment.orderId.equals(orderId)) {
-                return payment.qrCode;
+                return new OrderPayment(orderId, OrderStatus.valueOf(payment.status), payment.qrCode);
             }
         }
         return null;

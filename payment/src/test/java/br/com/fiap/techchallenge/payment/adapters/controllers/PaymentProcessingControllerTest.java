@@ -1,5 +1,6 @@
 package br.com.fiap.techchallenge.payment.adapters.controllers;
 
+import br.com.fiap.techchallenge.payment.core.usecase.entities.OrderStatus;
 import br.com.fiap.techchallenge.payment.core.usecase.in.IPaymentProcessingUseCase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,10 +28,10 @@ public class PaymentProcessingControllerTest {
     @Test
     void testGetPaymentStatusReturnsStatus() {
         String orderId = "1234";
-        String expectedStatus = "PENDING";
+        OrderStatus expectedStatus = OrderStatus.PENDING;
         when(paymentProcessingUseCase.getPaymentStatus(orderId)).thenReturn(expectedStatus);
 
-        String returnedStatus = paymentProcessingController.getPaymentStatus(orderId);
+        OrderStatus returnedStatus = paymentProcessingController.getPaymentStatus(orderId);
 
         assertEquals(expectedStatus, returnedStatus);
         verify(paymentProcessingUseCase, times(1)).getPaymentStatus(orderId);
@@ -48,7 +49,7 @@ public class PaymentProcessingControllerTest {
     void testApprovePaymentCallsCorrectUseCase() {
         String orderId = "1234";
         paymentProcessingController.approvePayment(orderId, "APPROVED");
-        verify(paymentProcessingUseCase, times(1)).approvePayment(orderId, "APPROVED");
+        verify(paymentProcessingUseCase, times(1)).approvePayment(orderId, OrderStatus.APPROVED);
     }
 
     @Test

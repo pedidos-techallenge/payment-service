@@ -1,6 +1,7 @@
 package br.com.fiap.techchallenge.payment.infrastructure.api;
 
 import br.com.fiap.techchallenge.payment.adapters.controllers.PaymentProcessingController;
+import br.com.fiap.techchallenge.payment.core.usecase.entities.OrderStatus;
 import br.com.fiap.techchallenge.payment.infrastructure.dto.OrderRequestDTO;
 import br.com.fiap.techchallenge.payment.infrastructure.dto.PaymentStatusDTO;
 import br.com.fiap.techchallenge.payment.infrastructure.dto.QRCodeResponseDTO;
@@ -125,10 +126,10 @@ public class PaymentProcessingServiceTest {
     @Test
     void testGetPaymentStatusReturnsStatusSuccessfully() {
         String orderId = "1234";
-        when(paymentProcessingController.getPaymentStatus(orderId)).thenReturn("PENDING");
+        when(paymentProcessingController.getPaymentStatus(orderId)).thenReturn(OrderStatus.PENDING);
         PaymentStatusDTO paymentStatus = (PaymentStatusDTO) paymentProcessingService.getPaymentStatus(orderId).getBody();
         assertEquals(paymentStatus.orderId(), orderId);
-        assertEquals(paymentStatus.orderStatus(), "PENDING");
+        assertEquals(paymentStatus.orderStatus(), OrderStatus.PENDING.name());
     }
 
     @Test

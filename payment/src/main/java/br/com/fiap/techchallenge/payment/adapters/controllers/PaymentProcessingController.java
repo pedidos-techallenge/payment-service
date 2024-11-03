@@ -1,5 +1,6 @@
 package br.com.fiap.techchallenge.payment.adapters.controllers;
 
+import br.com.fiap.techchallenge.payment.core.usecase.entities.OrderStatus;
 import br.com.fiap.techchallenge.payment.core.usecase.in.IPaymentProcessingUseCase;
 
 public class PaymentProcessingController {
@@ -9,7 +10,7 @@ public class PaymentProcessingController {
         this.paymentProcessingUseCase = paymentProcessingUseCase;
     }
 
-    public String getPaymentStatus(String orderId) {
+    public OrderStatus getPaymentStatus(String orderId) {
         return this.paymentProcessingUseCase.getPaymentStatus(orderId);
     }
 
@@ -18,7 +19,7 @@ public class PaymentProcessingController {
     }
 
     public void approvePayment(String orderId, String orderStatus) {
-        paymentProcessingUseCase.approvePayment(orderId, orderStatus);
+        paymentProcessingUseCase.approvePayment(orderId, OrderStatus.valueOf(orderStatus));
     }
 
     public String getQRCode(String orderId) {
