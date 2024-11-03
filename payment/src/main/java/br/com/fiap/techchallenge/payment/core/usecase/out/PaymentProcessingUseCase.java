@@ -52,6 +52,9 @@ public class PaymentProcessingUseCase implements IPaymentProcessingUseCase {
             throw new RuntimeException("Empty orderId provided");
         }
         OrderPayment orderPayment = paymentRepository.getPayment(orderId);
+        if (orderPayment == null) {
+            throw new RuntimeException("Order not found");
+        }
         String qrCode = orderPayment.getQrCode();
         if (qrCode == null) {
             qrCode = paymentGateway.processQRCodePayment(orderId);

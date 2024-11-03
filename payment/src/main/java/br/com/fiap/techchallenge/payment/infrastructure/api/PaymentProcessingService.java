@@ -42,6 +42,9 @@ public class PaymentProcessingService {
             }
             return new ResponseEntity<>(new QRCodeResponseDTO(orderId, qrCode), HttpStatus.OK);
         } catch (RuntimeException e) {
+            if (e.getMessage().equals("Order not found")) {
+                return new ResponseEntity<>("Pedido não encontrado", HttpStatus.NOT_FOUND);
+            }
             return new ResponseEntity<>("Erro ao buscar código de pagamento", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

@@ -1,7 +1,6 @@
 package br.com.fiap.techchallenge.payment.bdd;
 
 
-import io.cucumber.java.pt.Dado;
 import io.cucumber.java.pt.Então;
 import io.cucumber.java.pt.Quando;
 import io.restassured.RestAssured;
@@ -11,7 +10,6 @@ import org.junit.runner.RunWith;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @RunWith(SpringRunner.class)
@@ -27,18 +25,8 @@ public class TestOrderPaymentCreationRequest {
 
     private Response response;
 
-    @Dado("o pedido {int} já possui uma fatura")
-    public void orderHasPayment(int orderId) {
-        RestAssured.given()
-                .body("{\"orderId\": " + orderId + "}")
-                .contentType("application/json")
-                .post("/v1/payment/new")
-                .then()
-                .statusCode(200);
-    }
-
-    @Quando("houve solicitação para criação de uma fatura para o pedido {int}")
-    public void createOrderPayment(int orderId) {
+    @Quando("houve solicitação para criação de uma fatura para o pedido {string}")
+    public void createOrderPayment(String orderId) {
         response = RestAssured.given()
                 .body("{\"orderId\": " + orderId + "}")
                 .contentType("application/json")

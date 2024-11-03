@@ -3,11 +3,14 @@ package br.com.fiap.techchallenge.payment.infrastructure.bd;
 import br.com.fiap.techchallenge.payment.adapters.gateways.IPaymentRepository;
 import br.com.fiap.techchallenge.payment.core.usecase.entities.OrderPayment;
 import br.com.fiap.techchallenge.payment.core.usecase.entities.OrderStatus;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 
+
 @Repository
+//@Profile("test")
 public class LocalRepository implements IPaymentRepository {
 
     private ArrayList<Payment> payments = new ArrayList<>();
@@ -36,5 +39,9 @@ public class LocalRepository implements IPaymentRepository {
             }
         }
         return null;
+    }
+
+    public void clear() {
+        this.payments = new ArrayList<>();
     }
 }
