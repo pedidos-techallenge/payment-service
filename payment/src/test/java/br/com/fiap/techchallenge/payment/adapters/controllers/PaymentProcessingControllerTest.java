@@ -48,7 +48,7 @@ public class PaymentProcessingControllerTest {
     @Test
     void testApprovePaymentCallsCorrectUseCase() {
         String orderId = "1234";
-        paymentProcessingController.approvePayment(orderId, "APPROVED");
+        paymentProcessingController.approvePayment(orderId, OrderStatus.APPROVED.name());
         verify(paymentProcessingUseCase, times(1)).approvePayment(orderId, OrderStatus.APPROVED);
     }
 

@@ -52,24 +52,24 @@ public class PaymentProcessingServiceTest {
     @Test
     void testApprovePaymentReturnsOKWhenSucessfull() {
         String orderId = "1234";
-        OrderRequestDTO orderRequestDTO = new OrderRequestDTO(orderId, "APPROVED");
+        OrderRequestDTO orderRequestDTO = new OrderRequestDTO(orderId, OrderStatus.APPROVED.name());
 
         int responseStatus = paymentProcessingService.approvePayment(orderRequestDTO).getStatusCode().value();
 
         assertEquals(200, responseStatus);
-        verify(paymentProcessingController, times(1)).approvePayment(orderId, "APPROVED");
+        verify(paymentProcessingController, times(1)).approvePayment(orderId, OrderStatus.APPROVED.name());
     }
 
     @Test
     void testApprovePaymentReturns500WhenUnsucessfull() {
         String orderId = "1234";
-        OrderRequestDTO orderRequestDTO = new OrderRequestDTO(orderId, "APPROVED");
+        OrderRequestDTO orderRequestDTO = new OrderRequestDTO(orderId, OrderStatus.APPROVED.name());
 
-        doThrow(new RuntimeException()).when(paymentProcessingController).approvePayment(orderId, "APPROVED");
+        doThrow(new RuntimeException()).when(paymentProcessingController).approvePayment(orderId, OrderStatus.APPROVED.name());
         int responseStatus = paymentProcessingService.approvePayment(orderRequestDTO).getStatusCode().value();
 
         assertEquals(500, responseStatus);
-        verify(paymentProcessingController, times(1)).approvePayment(orderId, "APPROVED");
+        verify(paymentProcessingController, times(1)).approvePayment(orderId, OrderStatus.APPROVED.name());
     }
 
     @Test
