@@ -17,18 +17,30 @@ public class PaymentProcessingUseCase implements IPaymentProcessingUseCase {
 
     @Override
     public OrderStatus getPaymentStatus(String orderId) {
+        if (orderId.isEmpty()) {
+            throw new RuntimeException("Empty orderId provided");
+        }
         OrderPayment orderPayment = paymentRepository.getPayment(orderId);
         return orderPayment.getOrderStatus();
     }
 
     @Override
     public void createPayment(String orderId) {
+        if (orderId.isEmpty()) {
+            throw new RuntimeException("Empty orderId provided");
+        }
+        if (paymentRepository.getPayment(orderId) != null) {
+            throw new RuntimeException("Order already has a payment");
+        }
         OrderPayment orderPayment = new OrderPayment(orderId);
         paymentRepository.createPayment(orderPayment);
     }
 
     @Override
     public void approvePayment(String orderId, OrderStatus orderStatus) {
+        if (orderId.isEmpty()) {
+            throw new RuntimeException("Empty orderId provided");
+        }
         OrderPayment orderPayment = paymentRepository.getPayment(orderId);
         orderPayment.setOrderStatus(orderStatus);
         paymentRepository.updatePayment(orderPayment);
@@ -36,6 +48,9 @@ public class PaymentProcessingUseCase implements IPaymentProcessingUseCase {
 
     @Override
     public String getQRCode(String orderId) {
+        if (orderId.isEmpty()) {
+            throw new RuntimeException("Empty orderId provided");
+        }
         OrderPayment orderPayment = paymentRepository.getPayment(orderId);
         String qrCode = orderPayment.getQrCode();
         if (qrCode == null) {
