@@ -1,5 +1,6 @@
 package br.com.fiap.techchallenge.payment.bdd;
 
+import br.com.fiap.techchallenge.payment.bdd.config.SharedScenarioState;
 import br.com.fiap.techchallenge.payment.infrastructure.bd.LocalRepository;
 import io.cucumber.java.pt.Dado;
 import io.cucumber.java.pt.Então;
@@ -25,12 +26,18 @@ public class TestQRCodeRequest {
     @Autowired
     LocalRepository localRepository;
 
+    public SharedScenarioState sharedScenarioState;
+
+    public TestQRCodeRequest(SharedScenarioState sharedScenarioState) {
+        this.sharedScenarioState = sharedScenarioState;
+    }
+
     @Before
     public void setUp() {
         RestAssured.port = port;
+        this.sharedScenarioState.response = null;
         localRepository.clear();
     }
-
 
     private Response response;
 
@@ -42,13 +49,14 @@ public class TestQRCodeRequest {
 
     @Quando("foi solicitado o QR Code de pagamento para o pedido {string}")
     public void getQrCode(String orderID) {
-        response = RestAssured.given()
+        sharedScenarioState.response = RestAssured
+                .given()
                 .get("v1/payment/qrCode/" + orderID);
     }
 
     @Então("o QR Code de pagamento deve ser retornado")
     public void QRCodeReturned() {
-        String qrCode = response.then()
+        String qrCode = sharedScenarioState.response.then()
                 .statusCode(200)
                 .body(JsonSchemaValidator.matchesJsonSchemaInClasspath("schemas/QRCodeResponseSchema.json"))
                 .extract()
@@ -57,14 +65,4 @@ public class TestQRCodeRequest {
         assertFalse(qrCode.isEmpty());
     }
 
-
-    @Então("é   retornado a mensagem {string} com código {int}")
-    public void orderPaymentCreated(String expectedMessage, int statusCode) {
-        String responseMessage = response.then()
-                .statusCode(statusCode)
-                .extract()
-                .body()
-                .asString();
-        assertEquals(expectedMessage, responseMessage);
-    }
 }

@@ -24,10 +24,12 @@ public class PaymentProcessingService {
             this.paymentProcessingController.createPayment(orderRequest.orderId());
             return new ResponseEntity<>("Fatura gerada com sucesso", HttpStatus.OK);
         } catch (RuntimeException e) {
-            if (e.getMessage().equals("Order already has a payment")) {
-                return new ResponseEntity<>("Pedido já possui uma fatura", HttpStatus.BAD_REQUEST);
-            } else if (e.getMessage().equals("Empty orderId provided")) {
-                return new ResponseEntity<>("Número de pedido vazio", HttpStatus.BAD_REQUEST);
+            if (e.getMessage() != null) {
+                if (e.getMessage().equals("Order already has a payment")) {
+                    return new ResponseEntity<>("Pedido já possui uma fatura", HttpStatus.BAD_REQUEST);
+                } else if (e.getMessage().equals("Empty orderId provided")) {
+                    return new ResponseEntity<>("Número de pedido vazio", HttpStatus.BAD_REQUEST);
+                }
             }
             return new ResponseEntity<>("Erro ao criar pagamento", HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -42,8 +44,10 @@ public class PaymentProcessingService {
             }
             return new ResponseEntity<>(new QRCodeResponseDTO(orderId, qrCode), HttpStatus.OK);
         } catch (RuntimeException e) {
-            if (e.getMessage().equals("Order not found")) {
-                return new ResponseEntity<>("Pedido não encontrado", HttpStatus.NOT_FOUND);
+            if (e.getMessage() != null) {
+                if (e.getMessage().equals("Order not found")) {
+                    return new ResponseEntity<>("Pedido não encontrado", HttpStatus.NOT_FOUND);
+                }
             }
             return new ResponseEntity<>("Erro ao buscar código de pagamento", HttpStatus.INTERNAL_SERVER_ERROR);
         }
