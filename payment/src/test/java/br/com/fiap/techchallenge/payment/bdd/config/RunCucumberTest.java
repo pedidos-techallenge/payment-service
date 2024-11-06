@@ -1,4 +1,4 @@
-package br.com.fiap.techchallenge.payment.bdd;
+package br.com.fiap.techchallenge.payment.bdd.config;
 
 import io.cucumber.junit.platform.engine.Constants;
 import org.junit.platform.suite.api.ConfigurationParameter;

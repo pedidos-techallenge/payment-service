@@ -1,5 +1,6 @@
 package br.com.fiap.techchallenge.payment.adapters.controllers;
 
+import br.com.fiap.techchallenge.payment.core.usecase.entities.OrderStatus;
 import br.com.fiap.techchallenge.payment.core.usecase.in.IPaymentProcessingUseCase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,51 +26,78 @@ public class PaymentProcessingControllerTest {
     }
 
     @Test
-    void processPaymentReturnsQRCode() {
+    void testGetPaymentStatusReturnsStatus() {
+        String orderId = "1234";
+        OrderStatus expectedStatus = OrderStatus.PENDING;
+        when(paymentProcessingUseCase.getPaymentStatus(orderId)).thenReturn(expectedStatus);
+
+        OrderStatus returnedStatus = paymentProcessingController.getPaymentStatus(orderId);
+
+        assertEquals(expectedStatus, returnedStatus);
+        verify(paymentProcessingUseCase, times(1)).getPaymentStatus(orderId);
+    }
+
+
+    @Test
+    void testCreatePaymentCallsCorrectUseCase() {
+        String orderId = "1234";
+        paymentProcessingController.createPayment(orderId);
+        verify(paymentProcessingUseCase, times(1)).createPayment(orderId);
+    }
+
+    @Test
+    void testApprovePaymentCallsCorrectUseCase() {
+        String orderId = "1234";
+        paymentProcessingController.approvePayment(orderId, OrderStatus.APPROVED.name());
+        verify(paymentProcessingUseCase, times(1)).approvePayment(orderId, OrderStatus.APPROVED);
+    }
+
+    @Test
+    void testGetQrCodeReturnsQRCode() {
         String orderId = "order123";
         String expectedQRCode = "QR_CODE_12345";
 
-        when(paymentProcessingUseCase.processPayment(orderId)).thenReturn(expectedQRCode);
+        when(paymentProcessingUseCase.getQRCode(orderId)).thenReturn(expectedQRCode);
 
-        String actualQRCode = paymentProcessingController.processPayment(orderId);
+        String actualQRCode = paymentProcessingController.getQRCode(orderId);
 
         assertEquals(expectedQRCode, actualQRCode);
-        verify(paymentProcessingUseCase, times(1)).processPayment(orderId);
+        verify(paymentProcessingUseCase, times(1)).getQRCode(orderId);
     }
 
     @Test
-    void processPaymentHandlesNullOrderId() {
+    void testGetQrCodeHandlesNullOrderId() {
         String orderId = null;
 
-        when(paymentProcessingUseCase.processPayment(orderId)).thenReturn(null);
+        when(paymentProcessingUseCase.getQRCode(orderId)).thenReturn(null);
 
-        String actualQRCode = paymentProcessingController.processPayment(orderId);
+        String actualQRCode = paymentProcessingController.getQRCode(orderId);
 
         assertNull(actualQRCode);
-        verify(paymentProcessingUseCase, times(1)).processPayment(orderId);
+        verify(paymentProcessingUseCase, times(1)).getQRCode(orderId);
     }
 
     @Test
-    void processPaymentHandlesEmptyOrderId() {
+    void testGetQrCodeHandlesEmptyOrderId() {
         String orderId = "";
 
-        when(paymentProcessingUseCase.processPayment(orderId)).thenReturn(null);
+        when(paymentProcessingUseCase.getQRCode(orderId)).thenReturn(null);
 
-        String actualQRCode = paymentProcessingController.processPayment(orderId);
+        String actualQRCode = paymentProcessingController.getQRCode(orderId);
 
         assertNull(actualQRCode);
-        verify(paymentProcessingUseCase, times(1)).processPayment(orderId);
+        verify(paymentProcessingUseCase, times(1)).getQRCode(orderId);
     }
 
     @Test
-    void processPaymentHandlesInvalidOrderId() {
+    void testGetQrCodeHandlesInvalidOrderId() {
         String orderId = "invalid_order_id";
 
-        when(paymentProcessingUseCase.processPayment(orderId)).thenReturn(null);
+        when(paymentProcessingUseCase.getQRCode(orderId)).thenReturn(null);
 
-        String actualQRCode = paymentProcessingController.processPayment(orderId);
+        String actualQRCode = paymentProcessingController.getQRCode(orderId);
 
         assertNull(actualQRCode);
-        verify(paymentProcessingUseCase, times(1)).processPayment(orderId);
+        verify(paymentProcessingUseCase, times(1)).getQRCode(orderId);
     }
 }

@@ -1,6 +1,9 @@
 package br.com.fiap.techchallenge.payment.core.usecase.out;
 
 import br.com.fiap.techchallenge.payment.adapters.gateways.IPaymentGateway;
+import br.com.fiap.techchallenge.payment.adapters.gateways.IPaymentRepository;
+import br.com.fiap.techchallenge.payment.core.usecase.entities.OrderPayment;
+import br.com.fiap.techchallenge.payment.core.usecase.entities.OrderStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -14,57 +17,94 @@ public class PaymentProcessingUseCaseTest {
     @Mock
     private IPaymentGateway paymentGateway;
 
+    @Mock
+    private IPaymentRepository paymentRepository;
+
     private PaymentProcessingUseCase paymentProcessingUseCase;
 
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
-        paymentProcessingUseCase = new PaymentProcessingUseCase(paymentGateway);
+        paymentProcessingUseCase = new PaymentProcessingUseCase(paymentGateway, paymentRepository);
     }
 
     @Test
-    void processPaymentReturnsQRCode() {
-        String orderId = "order123";
-        String expectedQRCode = "QR_CODE_12345";
+    void testGetPaymentStatusReturnsStatus() {
+        OrderPayment testOrderPayment = new OrderPayment("1234", OrderStatus.PENDING, null);
 
-        when(paymentGateway.processQRCodePayment(orderId)).thenReturn(expectedQRCode);
+        when(paymentRepository.getPayment(testOrderPayment.getOrderId())).thenReturn(testOrderPayment);
 
-        String actualQRCode = paymentProcessingUseCase.processPayment(orderId);
+        OrderStatus actualStatus = paymentProcessingUseCase.getPaymentStatus(testOrderPayment.getOrderId());
 
-        assertEquals(expectedQRCode, actualQRCode);
-        verify(paymentGateway, times(1)).processQRCodePayment(orderId);
+        assertEquals(testOrderPayment.getOrderStatus(), actualStatus);
+        verify(paymentRepository, times(1)).getPayment(testOrderPayment.getOrderId());
+    }
+
+
+    @Test
+    void testCreatePaymentCallsCorrectMethod() {
+        String orderId = "1234";
+        paymentProcessingUseCase.createPayment(orderId);
+        verify(paymentRepository, times(1)).createPayment(any(OrderPayment.class));
     }
 
     @Test
-    void processPaymentHandlesNullOrderId() {
-        String orderId = null;
+    void testApprovePaymentCallsCorrectMethod() {
+        OrderPayment testOrderPayment = new OrderPayment("1234", OrderStatus.PENDING, null);
 
-        when(paymentGateway.processQRCodePayment(orderId)).thenReturn(null);
-        String actualQRCode = paymentProcessingUseCase.processPayment(orderId);
+        when(paymentRepository.getPayment(testOrderPayment.getOrderId())).thenReturn(testOrderPayment);
 
-        assertNull(actualQRCode);
-        verify(paymentGateway, times(1)).processQRCodePayment(orderId);
+        paymentProcessingUseCase.approvePayment(testOrderPayment.getOrderId(), OrderStatus.APPROVED);
+        verify(paymentRepository, times(1)).updatePayment(testOrderPayment);
     }
 
     @Test
-    void processPaymentHandlesEmptyOrderId() {
-        String orderId = "";
+    void testApprovePaymentThrowsExceptionWhenOrderNotFound() {
+        String orderId = "1234";
+        when(paymentRepository.getPayment(orderId)).thenThrow(new RuntimeException("Order not found"));
 
-        when(paymentGateway.processQRCodePayment(orderId)).thenReturn(null);
-        String actualQRCode = paymentProcessingUseCase.processPayment(orderId);
-
-        assertNull(actualQRCode);
-        verify(paymentGateway, times(1)).processQRCodePayment(orderId);
+        assertThrows(
+                RuntimeException.class
+                , () -> paymentProcessingUseCase.approvePayment(orderId, OrderStatus.APPROVED)
+        );
     }
 
     @Test
-    void processPaymentHandlesInvalidOrderId() {
-        String orderId = "invalid_order";
+    void testGetQRCodeCallsCorrectMethods() {
+        OrderPayment testOrderPayment = new OrderPayment("1234", OrderStatus.CREATED, null);
+        when(paymentRepository.getPayment(testOrderPayment.getOrderId())).thenReturn(testOrderPayment);
 
-        when(paymentGateway.processQRCodePayment(orderId)).thenReturn(null);
-        String actualQRCode = paymentProcessingUseCase.processPayment(orderId);
+        String qrCode = "123456";
+        when(paymentGateway.processQRCodePayment(testOrderPayment.getOrderId())).thenReturn(qrCode);
 
-        assertNull(actualQRCode);
-        verify(paymentGateway, times(1)).processQRCodePayment(orderId);
+        String actualQRCode = paymentProcessingUseCase.getQRCode(testOrderPayment.getOrderId());
+
+        assertEquals(qrCode, actualQRCode);
+        verify(paymentRepository, times(1)).updatePayment(testOrderPayment);
+    }
+
+    @Test
+    void testGetQRCodeReturnsExistingQRCode() {
+        OrderPayment testOrderPayment = new OrderPayment("1234", OrderStatus.PENDING, "QR_CODE_123456");
+        when(paymentRepository.getPayment(testOrderPayment.getOrderId())).thenReturn(testOrderPayment);
+
+        String actualQRCode = paymentProcessingUseCase.getQRCode(testOrderPayment.getOrderId());
+
+        assertEquals(testOrderPayment.getQrCode(), actualQRCode);
+        verify(paymentRepository, never()).updatePayment(testOrderPayment);
+    }
+
+    @Test
+    void testGetQRCodeThrowsExceptionWhenGatewayFails() {
+        OrderPayment testOrderPayment = new OrderPayment("1234", OrderStatus.CREATED, null);
+        when(paymentRepository.getPayment(testOrderPayment.getOrderId())).thenReturn(testOrderPayment);
+
+        when(paymentRepository.getPayment(testOrderPayment.getOrderId())).thenReturn(null);
+        when(paymentGateway.processQRCodePayment(testOrderPayment.getOrderId())).thenThrow(new RuntimeException("Gateway failed"));
+
+        assertThrows(
+                RuntimeException.class
+                , () -> paymentProcessingUseCase.getQRCode(testOrderPayment.getOrderId())
+        );
     }
 }
