@@ -1,7 +1,7 @@
 package br.com.fiap.techchallenge.payment.bdd;
 
 import br.com.fiap.techchallenge.payment.bdd.config.SharedScenarioState;
-import br.com.fiap.techchallenge.payment.infrastructure.bd.LocalRepository;
+import br.com.fiap.techchallenge.payment.infrastructure.bd.MockRepository;
 import io.cucumber.java.pt.Dado;
 import io.cucumber.java.pt.Então;
 import io.restassured.RestAssured;
@@ -21,7 +21,7 @@ public class TestStatusRequest {
     private int port;
 
     @Autowired
-    LocalRepository localRepository;
+    MockRepository mockRepository;
 
     public SharedScenarioState sharedScenarioState;
 
@@ -33,7 +33,7 @@ public class TestStatusRequest {
     public void setUp() {
         RestAssured.port = port;
         this.sharedScenarioState.response = null;
-        localRepository.clear();
+        mockRepository.clear();
     }
 
     @Dado("houve a verificação de status da fatura {string}")

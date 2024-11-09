@@ -1,6 +1,6 @@
 package br.com.fiap.techchallenge.payment.bdd.config;
 
-import br.com.fiap.techchallenge.payment.infrastructure.bd.LocalRepository;
+import br.com.fiap.techchallenge.payment.infrastructure.bd.MockRepository;
 import io.cucumber.spring.CucumberContextConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -11,6 +11,6 @@ import org.springframework.test.context.ActiveProfiles;
 @ActiveProfiles("test")
 public class CucumberSpringConfig {
     @Autowired
-    public LocalRepository localRepository;
+    public MockRepository mockRepository;
 
 }

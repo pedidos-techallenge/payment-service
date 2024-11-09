@@ -1,7 +1,7 @@
 package br.com.fiap.techchallenge.payment.bdd;
 
 import br.com.fiap.techchallenge.payment.bdd.config.SharedScenarioState;
-import br.com.fiap.techchallenge.payment.infrastructure.bd.LocalRepository;
+import br.com.fiap.techchallenge.payment.infrastructure.bd.MockRepository;
 import io.cucumber.java.Before;
 import io.cucumber.java.pt.Então;
 import io.cucumber.java.pt.Quando;
@@ -22,7 +22,7 @@ public class TestOrderPaymentApproval {
     private int port;
 
     @Autowired
-    LocalRepository localRepository;
+    MockRepository mockRepository;
 
     public SharedScenarioState sharedScenarioState;
 
@@ -34,7 +34,7 @@ public class TestOrderPaymentApproval {
     public void setUp() {
         RestAssured.port = port;
         this.sharedScenarioState.response = null;
-        localRepository.clear();
+        mockRepository.clear();
     }
 
     @Quando("o gateway de pagamento sinalizou a aprovação da fatura do pedido {string}")
