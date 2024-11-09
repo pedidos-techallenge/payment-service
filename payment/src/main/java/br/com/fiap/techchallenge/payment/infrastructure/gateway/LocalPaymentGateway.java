@@ -5,7 +5,6 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 @Service
-//@Profile("test")
 public class LocalPaymentGateway implements IPaymentGateway {
     @Override
     public String processQRCodePayment(String orderId) {
