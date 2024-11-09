@@ -1,7 +1,7 @@
 package br.com.fiap.techchallenge.payment.bdd;
 
 import br.com.fiap.techchallenge.payment.bdd.config.SharedScenarioState;
-import br.com.fiap.techchallenge.payment.infrastructure.bd.LocalRepository;
+import br.com.fiap.techchallenge.payment.infrastructure.bd.MockRepository;
 import io.cucumber.java.pt.Dado;
 import io.cucumber.java.pt.Então;
 import io.cucumber.java.pt.Quando;
@@ -24,7 +24,7 @@ public class TestQRCodeRequest {
     private int port;
 
     @Autowired
-    LocalRepository localRepository;
+    MockRepository mockRepository;
 
     public SharedScenarioState sharedScenarioState;
 
@@ -36,15 +36,15 @@ public class TestQRCodeRequest {
     public void setUp() {
         RestAssured.port = port;
         this.sharedScenarioState.response = null;
-        localRepository.clear();
+        mockRepository.clear();
     }
 
     private Response response;
 
     @Dado("o pedido {string} não foi registrado")
     public void orderNotFoundOnRepository(String orderId) {
-        localRepository.clear();
-        assertNull(localRepository.getPayment(orderId));
+        mockRepository.clear();
+        assertNull(mockRepository.getPayment(orderId));
     }
 
     @Quando("foi solicitado o QR Code de pagamento para o pedido {string}")

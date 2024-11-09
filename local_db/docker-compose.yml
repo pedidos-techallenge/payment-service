@@ -1,0 +1,14 @@
+version: "3.9"
+
+services:
+  db:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: pass_root
+      MYSQL_USER: payments
+      MYSQL_PASSWORD: pass_payments
+      MYSQL_DATABASE: orderpayments
+    volumes:
+      - ./docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+    ports:
+      - "3306:3306"

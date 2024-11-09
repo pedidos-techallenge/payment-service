@@ -10,8 +10,8 @@ import java.util.ArrayList;
 
 
 @Repository
-//@Profile("test")
-public class LocalRepository implements IPaymentRepository {
+@Profile("test")
+public class MockRepository implements IPaymentRepository {
 
     private ArrayList<Payment> payments = new ArrayList<>();
 
