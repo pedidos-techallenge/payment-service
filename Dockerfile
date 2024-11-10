@@ -18,4 +18,6 @@ EXPOSE 8080 8000
 COPY --from=builder /tmp/app/target/*.jar app.jar
 RUN chmod +x app.jar
 
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENV SPRING_PROFILE=$SPRING_PROFILE
+
+ENTRYPOINT java -jar -Dspring.profiles.active=$SPRING_PROFILE /workspace/app.jar
