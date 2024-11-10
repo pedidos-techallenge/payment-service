@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: payment-deployment
+  labels:
+    app: payment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: payment
+  template:
+    metadata:
+      labels:
+        app: payment
+    spec:
+      containers:
+      - name: payment
+        image: payment-service:local
+        env:
+          - name: SPRING_PROFILE
+            value: prd
+          - name: MYSQL_HOST
+            value: mysql
+          - name: MYSQL_PORT
+            value: "3306"
+          - name: MYSQL_DATABSE
+            value: orderpayments
+          - name: MYSQL_USER
+            value: payments
+          - name: MYSQL_PASSWORD
+            value: pass_payments
+        ports:
+        - containerPort: 8080
+        resources:
+          limits:
+            memory: "500Mi"
+            cpu: "500m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: payment-service-lb
+spec:
+  selector:
+    app: payment
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+  type: LoadBalancer
