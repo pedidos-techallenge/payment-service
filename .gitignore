@@ -67,3 +67,5 @@ terraform.rc
 ignore_me/
 *.zip
 python/
+
+.vscode
