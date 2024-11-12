@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: payment-deployment
+  labels:
+    app: payment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: payment
+  template:
+    metadata:
+      labels:
+        app: payment
+    spec:
+      containers:
+      - name: payment
+        image: jubzzz/payment-service:latest
+        env:
+          - name: SPRING_PROFILE
+            value: placeholder
+          - name: MYSQL_HOST
+            value: ""
+          - name: MYSQL_PORT
+            value: ""
+          - name: MYSQL_DATABSE
+            value: ""
+          - name: MYSQL_USER
+            value: ""
+          - name: MYSQL_PASSWORD
+            value: ""
+        ports:
+        - containerPort: 8080
+        resources:
+          limits:
+            memory: "500Mi"
+            cpu: "500m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: payment-service-lb
+  annotations: 
+    service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
+    service.beta.kubernetes.io/aws-load-balancer-internal: "true"
+spec:
+  selector:
+    app: payment
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+  type: LoadBalancer

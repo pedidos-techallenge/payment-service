@@ -1,0 +1,39 @@
+name: Deploy Code to EKS cluster
+
+on:
+  workflow_dispatch:
+
+env:
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
+  AWS_DEFAULT_REGION: 'us-east-1'
+  MYSQL_USERNAME: ${{ secrets.MYSQL_USERNAME }}
+  MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+
+jobs:
+  kubernetes:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+
+      - name: update-kubeconfig
+        run: aws eks update-kubeconfig --region us-east-1 --name orderpayments-eks
+
+      - name: apply-kubernetes
+        run: |
+          kubectl apply -f ./production/kubernetes/deployment.yaml
+          export MYSQL_HOST=$(aws rds describe-db-instances \
+              --region=us-east-1 \
+              --db-instance-identifier techchallenge-payment-service \
+              --query 'DBInstances[0].Endpoint.Address' \
+              --output text)
+          kubectl set env deployment/payment-deployment \
+              SPRING_PROFILE=prd \
+              MYSQL_HOST=$MYSQL_HOST \
+              MYSQL_PORT=3306 \
+              MYSQL_DATABASE=orderpayments \
+              MYSQL_USER=$MYSQL_USERNAME \
+              MYSQL_PASSWORD=$MYSQL_PASSWORD
