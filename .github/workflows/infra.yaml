@@ -1,4 +1,4 @@
-name: Deploy Code to EKS cluster
+name: Deploy Infrastructure to AWS
 
 on:
   workflow_dispatch:
@@ -28,14 +28,14 @@ jobs:
         run: terraform -chdir=./production/terraform init
 
       - name: terraform-apply-eks-rds
-        run: terraform -chdir=./production/terraform apply -var "MYSQL_USERNAME=${MYSQL_USERNAME}" -var "MYSQL_PASSWORD=${MYSQL_PASSWORD}"
+        run: terraform -chdir=./production/terraform apply -auto-approve -var "MYSQL_USERNAME=${MYSQL_USERNAME}" -var "MYSQL_PASSWORD=${MYSQL_PASSWORD}"
 
       # Deploy the lambda function to initialize the database
       - name: terraform-init-lambda
         run: terraform -chdir=./production/lambda-initdb init
 
       - name: terraform-apply-lambda
-        run: terraform -chdir=./production/lambda-initdb apply -var "MYSQL_USERNAME=${MYSQL_USERNAME}" -var "MYSQL_PASSWORD=${MYSQL_PASSWORD}"
+        run: terraform -chdir=./production/lambda-initdb apply -auto-approve -var "MYSQL_USERNAME=${MYSQL_USERNAME}" -var "MYSQL_PASSWORD=${MYSQL_PASSWORD}"
 
       - name: terraform-destroy-lambda
-        run: terraform -chdir=./production/lambda-initdb destroy -var "MYSQL_USERNAME=" -var "MYSQL_PASSWORD="
+        run: terraform -chdir=./production/lambda-initdb destroy -auto-approve -var "MYSQL_USERNAME=" -var "MYSQL_PASSWORD="
