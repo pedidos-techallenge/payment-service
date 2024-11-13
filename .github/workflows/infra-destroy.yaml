@@ -1,0 +1,31 @@
+name: Destroy Infrastructure on AWS
+
+on:
+  workflow_dispatch:
+
+env:
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
+  AWS_DEFAULT_REGION: 'us-east-1'
+  TF_STATE_BUCKET: ${{ secrets.TF_STATE_BUCKET }}
+  MYSQL_USERNAME: ${{ secrets.MYSQL_USERNAME }}
+  MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+      
+      - name: setup-terraform
+        uses: hashicorp/setup-terraform@v1
+
+      # Deploy the eks cluster and rds instance
+      - name: terraform-init-eks-rds
+        run: terraform -chdir=./production/terraform init
+
+      - name: terraform-destroy-eks-rds
+        run: terraform -chdir=./production/terraform destroy -auto-approve -var "MYSQL_USERNAME=" -var "MYSQL_PASSWORD="

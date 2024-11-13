@@ -1,25 +1,8 @@
-data "aws_iam_role" LabRole {
-  name = "LabRole"
-}
-data "aws_subnets" "private-subnets" {
-  filter {
-    name   = "vpc-id"
-    values = [data.aws_vpc.techchallenge-vpc.id]
-  }
-
-  filter {
-    name   = "tag:Name"
-    values = ["*private*"]
-  }
-}
-
 
 resource "aws_security_group" "eks_security_group" {
   name        = "eks-security-group"
   vpc_id = data.aws_vpc.techchallenge-vpc.id
 }
-
-
 
 resource "aws_eks_cluster" "orderpayments-eks" {
   name     = "orderpayments-eks"

@@ -17,3 +17,19 @@ data "aws_vpc" "techchallenge-vpc" {
     values = ["techchallenge-vpc"]
   }
 }
+
+data "aws_iam_role" LabRole {
+  name = "LabRole"
+}
+
+data "aws_subnets" "private-subnets" {
+  filter {
+    name   = "vpc-id"
+    values = [data.aws_vpc.techchallenge-vpc.id]
+  }
+
+  filter {
+    name   = "tag:Name"
+    values = ["*private*"]
+  }
+}
