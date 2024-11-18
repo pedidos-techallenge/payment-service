@@ -119,6 +119,12 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        <!-- AWS -->
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>sqs</artifactId>
+            <version>2.29.15</version>
+        </dependency>
         <!-- cucumber -->
         <dependency>
             <groupId>io.cucumber</groupId>
