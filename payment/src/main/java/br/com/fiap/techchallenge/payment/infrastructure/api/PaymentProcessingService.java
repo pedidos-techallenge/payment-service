@@ -5,6 +5,8 @@ import br.com.fiap.techchallenge.payment.core.usecase.entities.OrderStatus;
 import br.com.fiap.techchallenge.payment.infrastructure.dto.OrderRequestDTO;
 import br.com.fiap.techchallenge.payment.infrastructure.dto.PaymentStatusDTO;
 import br.com.fiap.techchallenge.payment.infrastructure.dto.QRCodeResponseDTO;
+import br.com.fiap.techchallenge.payment.infrastructure.messaging.PaymentProcessingMessaging;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,16 +16,22 @@ import org.springframework.web.bind.annotation.*;
 public class PaymentProcessingService {
     PaymentProcessingController paymentProcessingController;
 
-    public PaymentProcessingService(PaymentProcessingController paymentProcessingController) {
+    @Autowired
+    PaymentProcessingMessaging paymentProcessingMessaging;
+
+    public PaymentProcessingService(PaymentProcessingController paymentProcessingController, PaymentProcessingMessaging paymentProcessingMessaging) {
         this.paymentProcessingController = paymentProcessingController;
+        this.paymentProcessingMessaging = paymentProcessingMessaging;
     }
 
     @PostMapping("new")
     public ResponseEntity<?> createPayment(@RequestBody OrderRequestDTO orderRequest) {
         try {
             this.paymentProcessingController.createPayment(orderRequest.orderId());
+            this.paymentProcessingMessaging.sendMessage(orderRequest.orderId());
             return new ResponseEntity<>("Fatura gerada com sucesso", HttpStatus.OK);
         } catch (RuntimeException e) {
+            System.out.println(e.getMessage());
             if (e.getMessage() != null) {
                 if (e.getMessage().equals("Order already has a payment")) {
                     return new ResponseEntity<>("Pedido já possui uma fatura", HttpStatus.BAD_REQUEST);

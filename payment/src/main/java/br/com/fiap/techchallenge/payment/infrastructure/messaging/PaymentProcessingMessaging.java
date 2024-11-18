@@ -1,21 +1,53 @@
-import com.amazonaws.services.sqs.AmazonSQS;
-import com.amazonaws.services.sqs.AmazonSQSClientBuilder;
-import com.amazonaws.services.sqs.model.SendMessageRequest;
+package br.com.fiap.techchallenge.payment.infrastructure.messaging;
 
 
+import br.com.fiap.techchallenge.payment.infrastructure.config.PaymentProcessingMessagingConfig;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import software.amazon.awssdk.auth.credentials.EnvironmentVariableCredentialsProvider;
+import software.amazon.awssdk.auth.credentials.ProfileCredentialsProvider;
+import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.sqs.SqsClient;
+import software.amazon.awssdk.services.sqs.model.MessageAttributeValue;
+import software.amazon.awssdk.services.sqs.model.SendMessageRequest;
 
+import java.util.HashMap;
+import java.util.Map;
+
+
+@Service
 public class PaymentProcessingMessaging {
 
-    private final AmazonSQS sqs = AmazonSQSClientBuilder.defaultClient();
+    private final SqsClient sqsClient;
 
-    @Value("${sqs.queue.url}")
-    private final String queueUrl;
+    @Autowired
+    PaymentProcessingMessagingConfig paymentProcessingMessagingConfig;
 
-    public void sendPaymentProcessingMessage(String orderId) {
-        SendMessageRequest send_msg_request = new SendMessageRequest()
-                .withQueueUrl(queueUrl)
-                .withMessageBody(orderId)
-                .withDelaySeconds(5);
-        sqs.sendMessage(send_msg_request);
+    public PaymentProcessingMessaging(PaymentProcessingMessagingConfig paymentProcessingMessagingConfig) {
+        this.paymentProcessingMessagingConfig = paymentProcessingMessagingConfig;
+        sqsClient = SqsClient.builder()
+                .region(Region.of(this.paymentProcessingMessagingConfig.region))
+//                .credentialsProvider(ProfileCredentialsProvider.create())
+                .credentialsProvider(EnvironmentVariableCredentialsProvider.create())
+                .build();
+    }
+
+    public void sendMessage(String message) {
+        Map<String, MessageAttributeValue> messageAttributes = new HashMap<>();
+        MessageAttributeValue messageAttributeValue = MessageAttributeValue.builder()
+                .stringValue("payment")
+                .dataType("String")
+                .build();
+        messageAttributes.put("messageType", messageAttributeValue);
+
+
+        SendMessageRequest sendMessageStandadQueue = SendMessageRequest.builder()
+                .queueUrl(this.paymentProcessingMessagingConfig.queueUrl)
+                .messageBody(message)
+                .messageAttributes(messageAttributes)
+                .build();
+
+        sqsClient.sendMessage(sendMessageStandadQueue);
+        System.out.println("##### Message sent");
     }
 }
