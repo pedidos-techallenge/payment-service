@@ -1,13 +1,13 @@
 package br.com.fiap.techchallenge.payment.infrastructure.config;
 
-import br.com.fiap.techchallenge.payment.infrastructure.messaging.PaymentProcessingMessaging;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class PaymentProcessingMessagingConfig {
+public class MessagePublisherEnvConfig {
     @Value("${spring.aws.region}")
-    public String region;
+    public String awsRegion;
 
     @Value("${spring.aws.sqs.queue.url}")
     public String queueUrl;
