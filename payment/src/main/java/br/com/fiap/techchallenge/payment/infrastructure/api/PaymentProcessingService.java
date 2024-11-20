@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 public class PaymentProcessingService {
     PaymentProcessingController paymentProcessingController;
 
+
     public PaymentProcessingService(PaymentProcessingController paymentProcessingController) {
         this.paymentProcessingController = paymentProcessingController;
     }
@@ -24,6 +25,7 @@ public class PaymentProcessingService {
             this.paymentProcessingController.createPayment(orderRequest.orderId());
             return new ResponseEntity<>("Fatura gerada com sucesso", HttpStatus.OK);
         } catch (RuntimeException e) {
+            System.out.println(e.getMessage());
             if (e.getMessage() != null) {
                 if (e.getMessage().equals("Order already has a payment")) {
                     return new ResponseEntity<>("Pedido já possui uma fatura", HttpStatus.BAD_REQUEST);
@@ -59,6 +61,7 @@ public class PaymentProcessingService {
             this.paymentProcessingController.approvePayment(orderRequest.orderId(), orderRequest.orderStatus());
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (RuntimeException e) {
+            // TODO: Catch invalid transition
             return new ResponseEntity<>("Erro ao aprovar pagamento", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

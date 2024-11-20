@@ -1,5 +1,6 @@
 package br.com.fiap.techchallenge.payment.core.usecase.out;
 
+import br.com.fiap.techchallenge.payment.adapters.gateways.IMessagePublisher;
 import br.com.fiap.techchallenge.payment.adapters.gateways.IPaymentGateway;
 import br.com.fiap.techchallenge.payment.adapters.gateways.IPaymentRepository;
 import br.com.fiap.techchallenge.payment.core.usecase.entities.OrderPayment;
@@ -9,10 +10,13 @@ import br.com.fiap.techchallenge.payment.core.usecase.in.IPaymentProcessingUseCa
 public class PaymentProcessingUseCase implements IPaymentProcessingUseCase {
     IPaymentGateway paymentGateway;
     IPaymentRepository paymentRepository;
+    IMessagePublisher messagePublisher;
 
-    public PaymentProcessingUseCase(IPaymentGateway paymentGateway, IPaymentRepository paymentRepository) {
+    public PaymentProcessingUseCase(IPaymentGateway paymentGateway
+            , IPaymentRepository paymentRepository, IMessagePublisher messagePublisher) {
         this.paymentGateway = paymentGateway;
         this.paymentRepository = paymentRepository;
+        this.messagePublisher = messagePublisher;
     }
 
     @Override
@@ -44,6 +48,7 @@ public class PaymentProcessingUseCase implements IPaymentProcessingUseCase {
         OrderPayment orderPayment = paymentRepository.getPayment(orderId);
         orderPayment.setOrderStatus(orderStatus);
         paymentRepository.updatePayment(orderPayment);
+        messagePublisher.sendMessage(orderPayment);
     }
 
     @Override

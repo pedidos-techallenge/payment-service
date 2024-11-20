@@ -1,5 +1,6 @@
 package br.com.fiap.techchallenge.payment.core.usecase.out;
 
+import br.com.fiap.techchallenge.payment.adapters.gateways.IMessagePublisher;
 import br.com.fiap.techchallenge.payment.adapters.gateways.IPaymentGateway;
 import br.com.fiap.techchallenge.payment.adapters.gateways.IPaymentRepository;
 import br.com.fiap.techchallenge.payment.core.usecase.entities.OrderPayment;
@@ -20,12 +21,15 @@ public class PaymentProcessingUseCaseTest {
     @Mock
     private IPaymentRepository paymentRepository;
 
+    @Mock
+    private IMessagePublisher messagePublisher;
+
     private PaymentProcessingUseCase paymentProcessingUseCase;
 
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
-        paymentProcessingUseCase = new PaymentProcessingUseCase(paymentGateway, paymentRepository);
+        paymentProcessingUseCase = new PaymentProcessingUseCase(paymentGateway, paymentRepository, messagePublisher);
     }
 
     @Test
