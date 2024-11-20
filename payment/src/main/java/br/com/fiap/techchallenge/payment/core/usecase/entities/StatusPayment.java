@@ -1,6 +1,6 @@
 package br.com.fiap.techchallenge.payment.core.usecase.entities;
 
-public enum PaymentStatus {
+public enum StatusPayment {
     CREATED,
     PENDING,
     PAID,

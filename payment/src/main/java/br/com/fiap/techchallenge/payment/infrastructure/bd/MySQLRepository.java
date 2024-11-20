@@ -1,6 +1,6 @@
 package br.com.fiap.techchallenge.payment.infrastructure.bd;
 
-import br.com.fiap.techchallenge.payment.core.usecase.entities.PaymentStatus;
+import br.com.fiap.techchallenge.payment.core.usecase.entities.StatusPayment;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.core.RowMapper;
@@ -31,8 +31,8 @@ public class MySQLRepository implements IPaymentRepository {
                 " VALUES (:order_id, :payment_status, :qr_code)";
 
         MapSqlParameterSource parameters = new MapSqlParameterSource();
-        parameters.addValue("order_id", orderPayment.getOrderId());
-        parameters.addValue("payment_status", orderPayment.getOrderStatus().toString());
+        parameters.addValue("order_id", orderPayment.getIdOrder());
+        parameters.addValue("payment_status", orderPayment.getStatusPayment().toString());
         parameters.addValue("qr_code", orderPayment.getQrCode());
         namedParameterJdbcTemplate.update(sql, parameters);
     }
@@ -46,24 +46,24 @@ public class MySQLRepository implements IPaymentRepository {
                 " WHERE order_id = :order_id";
 
         MapSqlParameterSource parameters = new MapSqlParameterSource();
-        parameters.addValue("order_id", orderPayment.getOrderId());
-        parameters.addValue("payment_status", orderPayment.getOrderStatus().toString());
+        parameters.addValue("order_id", orderPayment.getIdOrder());
+        parameters.addValue("payment_status", orderPayment.getStatusPayment().toString());
         parameters.addValue("qr_code", orderPayment.getQrCode());
         namedParameterJdbcTemplate.update(sql, parameters);
     }
 
     @Override
-    public OrderPayment getPayment(String orderId) {
+    public OrderPayment getPayment(String idOrder) {
         String sql = "SELECT * FROM orderpayments.tb_order_payments WHERE order_id = :order_id";
 
         MapSqlParameterSource parameters = new MapSqlParameterSource();
-        parameters.addValue("order_id", orderId);
+        parameters.addValue("order_id", idOrder);
         RowMapper<OrderPayment> rowMapper = new RowMapper<OrderPayment>() {
             @Override
             public OrderPayment mapRow(@NotNull ResultSet rs, int rowNum) throws SQLException {
                 return new OrderPayment(
                     rs.getString("order_id"),
-                    PaymentStatus.valueOf(rs.getString("payment_status")),
+                    StatusPayment.valueOf(rs.getString("payment_status")),
                     rs.getString("qr_code")
                 );
             }

@@ -1,7 +1,7 @@
 package br.com.fiap.techchallenge.payment.infrastructure.bd;
 
 import br.com.fiap.techchallenge.payment.core.usecase.entities.OrderPayment;
-import br.com.fiap.techchallenge.payment.core.usecase.entities.PaymentStatus;
+import br.com.fiap.techchallenge.payment.core.usecase.entities.StatusPayment;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -19,25 +19,25 @@ public class MockRepositoryTest {
     // createPayment
     @Test
     void testCreatePaymentInsertsNewPayment() {
-        OrderPayment testOrderPayment = new OrderPayment("1234", PaymentStatus.CREATED, null);
+        OrderPayment testOrderPayment = new OrderPayment("1234", StatusPayment.CREATED, null);
         mockRepository.createPayment(testOrderPayment);
-        assertEquals(PaymentStatus.CREATED, mockRepository.getPayment("1234").getOrderStatus());
+        assertEquals(StatusPayment.CREATED, mockRepository.getPayment("1234").getStatusPayment());
     }
 
-    // setPaymentStatus(orderId, status)
+    // setStatusPayment(idOrder, status)
     @Test
-    void setPaymentStatusUpdatesStatus() {
-        OrderPayment testOrderPayment = new OrderPayment("1234", PaymentStatus.PENDING, null);
+    void setStatusPaymentUpdatesStatus() {
+        OrderPayment testOrderPayment = new OrderPayment("1234", StatusPayment.PENDING, null);
         mockRepository.createPayment(testOrderPayment);
-        OrderPayment testUpdatedOrderPayment = new OrderPayment("1234", PaymentStatus.PAID, null);
+        OrderPayment testUpdatedOrderPayment = new OrderPayment("1234", StatusPayment.PAID, null);
         mockRepository.updatePayment(testUpdatedOrderPayment);
-        assertEquals(testUpdatedOrderPayment.getOrderStatus(), mockRepository.getPayment(testOrderPayment.getOrderId()).getOrderStatus());
+        assertEquals(testUpdatedOrderPayment.getStatusPayment(), mockRepository.getPayment(testOrderPayment.getIdOrder()).getStatusPayment());
     }
 
     @Test
-    void setPaymentStatusWhenPaymentIsNotFound() {
-        OrderPayment testOrderPayment = new OrderPayment("1234", PaymentStatus.PENDING, null);
+    void setStatusPaymentWhenPaymentIsNotFound() {
+        OrderPayment testOrderPayment = new OrderPayment("1234", StatusPayment.PENDING, null);
         mockRepository.updatePayment(testOrderPayment);
-        assertNull(mockRepository.getPayment(testOrderPayment.getOrderId()));
+        assertNull(mockRepository.getPayment(testOrderPayment.getIdOrder()));
     }
 }

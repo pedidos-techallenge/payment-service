@@ -4,7 +4,7 @@ import br.com.fiap.techchallenge.payment.adapters.gateways.IMessagePublisher;
 import br.com.fiap.techchallenge.payment.adapters.gateways.IPaymentGateway;
 import br.com.fiap.techchallenge.payment.adapters.gateways.IPaymentRepository;
 import br.com.fiap.techchallenge.payment.core.usecase.entities.OrderPayment;
-import br.com.fiap.techchallenge.payment.core.usecase.entities.PaymentStatus;
+import br.com.fiap.techchallenge.payment.core.usecase.entities.StatusPayment;
 import br.com.fiap.techchallenge.payment.core.usecase.in.IPaymentProcessingUseCase;
 
 public class PaymentProcessingUseCase implements IPaymentProcessingUseCase {
@@ -20,49 +20,49 @@ public class PaymentProcessingUseCase implements IPaymentProcessingUseCase {
     }
 
     @Override
-    public PaymentStatus getPaymentStatus(String orderId) {
-        if (orderId.isEmpty()) {
-            throw new RuntimeException("Empty orderId provided");
+    public StatusPayment getStatusPayment(String idOrder) {
+        if (idOrder.isEmpty()) {
+            throw new RuntimeException("Empty idOrder provided");
         }
-        OrderPayment orderPayment = paymentRepository.getPayment(orderId);
-        return orderPayment.getOrderStatus();
+        OrderPayment orderPayment = paymentRepository.getPayment(idOrder);
+        return orderPayment.getStatusPayment();
     }
 
     @Override
-    public void createPayment(String orderId) {
-        if (orderId.isEmpty()) {
-            throw new RuntimeException("Empty orderId provided");
+    public void createPayment(String idOrder) {
+        if (idOrder.isEmpty()) {
+            throw new RuntimeException("Empty idOrder provided");
         }
-        if (paymentRepository.getPayment(orderId) != null) {
+        if (paymentRepository.getPayment(idOrder) != null) {
             throw new RuntimeException("Order already has a payment");
         }
-        OrderPayment orderPayment = new OrderPayment(orderId);
+        OrderPayment orderPayment = new OrderPayment(idOrder);
         paymentRepository.createPayment(orderPayment);
     }
 
     @Override
-    public void approvePayment(String orderId, PaymentStatus paymentStatus) {
-        if (orderId.isEmpty()) {
-            throw new RuntimeException("Empty orderId provided");
+    public void approvePayment(String idOrder, StatusPayment statusPayment) {
+        if (idOrder.isEmpty()) {
+            throw new RuntimeException("Empty idOrder provided");
         }
-        OrderPayment orderPayment = paymentRepository.getPayment(orderId);
-        orderPayment.setOrderStatus(paymentStatus);
+        OrderPayment orderPayment = paymentRepository.getPayment(idOrder);
+        orderPayment.setStatusPayment(statusPayment);
         paymentRepository.updatePayment(orderPayment);
         messagePublisher.sendMessage(orderPayment);
     }
 
     @Override
-    public String getQRCode(String orderId) {
-        if (orderId.isEmpty()) {
-            throw new RuntimeException("Empty orderId provided");
+    public String getQRCode(String idOrder) {
+        if (idOrder.isEmpty()) {
+            throw new RuntimeException("Empty idOrder provided");
         }
-        OrderPayment orderPayment = paymentRepository.getPayment(orderId);
+        OrderPayment orderPayment = paymentRepository.getPayment(idOrder);
         if (orderPayment == null) {
             throw new RuntimeException("Order not found");
         }
         String qrCode = orderPayment.getQrCode();
         if (qrCode == null) {
-            qrCode = paymentGateway.processQRCodePayment(orderId);
+            qrCode = paymentGateway.processQRCodePayment(idOrder);
             orderPayment.setQrCode(qrCode);
             paymentRepository.updatePayment(orderPayment);
             return qrCode;

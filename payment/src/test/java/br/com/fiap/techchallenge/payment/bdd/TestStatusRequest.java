@@ -37,8 +37,8 @@ public class TestStatusRequest {
     }
 
     @Dado("houve a verificação de status da fatura {string}")
-    public void orderPaymentStatusRequest(String orderId) {
-        this.sharedScenarioState.response = RestAssured.get("/v1/payment/status/" + orderId);
+    public void orderStatusPaymentRequest(String idOrder) {
+        this.sharedScenarioState.response = RestAssured.get("/v1/payment/status/" + idOrder);
     }
 
     @Então("Deve ser retornado uma resposta com o status {string}")
@@ -46,7 +46,7 @@ public class TestStatusRequest {
         String actualStatus = this.sharedScenarioState.response.then()
                 .statusCode(200)
                 .extract()
-                .path("orderStatus");
+                .path("statusPayment");
         assertEquals(expectedStatus, actualStatus);
     }
 }

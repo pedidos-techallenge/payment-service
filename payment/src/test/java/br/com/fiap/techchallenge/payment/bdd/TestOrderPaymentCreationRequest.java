@@ -30,9 +30,9 @@ public class TestOrderPaymentCreationRequest {
     }
 
     @Quando("houve solicitação para criação de uma fatura para o pedido {string}")
-    public void createOrderPayment(String orderId) {
+    public void createOrderPayment(String idOrder) {
         sharedScenarioState.response = RestAssured.given()
-                .body("{\"orderId\": " + orderId + "}")
+                .body("{\"idOrder\": " + idOrder + "}")
                 .contentType("application/json")
                 .post("/v1/payment/new");
     }
@@ -40,7 +40,7 @@ public class TestOrderPaymentCreationRequest {
     @Quando("houve solicitação para criação de uma fatura sem o id do pedido")
     public void createInvalidOrderPaymentRequest() {
         sharedScenarioState.response = RestAssured.given()
-                .body("{\"orderId\": \"\"}")
+                .body("{\"idOrder\": \"\"}")
                 .contentType("application/json")
                 .post("v1/payment/new");
     }

@@ -14,7 +14,7 @@
 ```
 curl -X POST http://localhost:8080/v1/payment/new \
      -H "Content-Type: application/json" \
-     -d '{"orderId": "12345"}'
+     -d '{"idOrder": "12345"}'
 ```
 
 ## via docker-compose (MySQL db, local profile)
@@ -38,7 +38,7 @@ docker run -it \
 ```
 curl -X POST http://localhost:8080/v1/payment/new \
      -H "Content-Type: application/json" \
-     -d '{"orderId": "12345"}'
+     -d '{"idOrder": "12345"}'
 ```
 
 ## via kubernetes kind cluster (MySQL db, local profile)
@@ -56,7 +56,7 @@ curl -X POST http://localhost:8080/v1/payment/new \
 ```
 curl -X POST http://localhost:8080/v1/payment/new \
      -H "Content-Type: application/json" \
-     -d '{"orderId": "12345"}'
+     -d '{"idOrder": "12345"}'
 ```
 
 # Running staging environment on AWS:

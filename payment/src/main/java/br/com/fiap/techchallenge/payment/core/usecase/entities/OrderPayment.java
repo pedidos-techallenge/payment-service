@@ -1,42 +1,42 @@
 package br.com.fiap.techchallenge.payment.core.usecase.entities;
 
 public class OrderPayment {
-    private final String orderId;
-    private PaymentStatus paymentStatus;
+    private final String idOrder;
+    private StatusPayment statusPayment;
     private String qrCode;
 
-    public OrderPayment(String orderId) {
-        this.orderId = orderId;
-        this.paymentStatus = PaymentStatus.CREATED;
+    public OrderPayment(String idOrder) {
+        this.idOrder = idOrder;
+        this.statusPayment = StatusPayment.CREATED;
     }
 
-    public OrderPayment(String orderId, PaymentStatus paymentStatus, String qrCode) {
-        this.orderId = orderId;
-        this.paymentStatus = paymentStatus;
+    public OrderPayment(String idOrder, StatusPayment statusPayment, String qrCode) {
+        this.idOrder = idOrder;
+        this.statusPayment = statusPayment;
         this.qrCode = qrCode;
     }
 
-    public String getOrderId() {
-        return orderId;
+    public String getIdOrder() {
+        return idOrder;
     }
 
-    public PaymentStatus getOrderStatus() {
-        return paymentStatus;
+    public StatusPayment getStatusPayment() {
+        return statusPayment;
     }
 
     public String getQrCode() {
         return qrCode;
     }
 
-    public void setOrderStatus(PaymentStatus paymentStatus) {
-        if (this.paymentStatus.equals(PaymentStatus.CREATED) && paymentStatus.equals(PaymentStatus.PENDING)) {
-            this.paymentStatus = paymentStatus;
-        } else if (this.paymentStatus.equals(PaymentStatus.PENDING) && paymentStatus.equals(PaymentStatus.PAID)) {
-            this.paymentStatus = paymentStatus;
-        } else if (this.paymentStatus.equals(PaymentStatus.PENDING) && paymentStatus.equals(PaymentStatus.DENIED)) {
-            this.paymentStatus = paymentStatus;
+    public void setStatusPayment(StatusPayment statusPayment) {
+        if (this.statusPayment.equals(StatusPayment.CREATED) && statusPayment.equals(StatusPayment.PENDING)) {
+            this.statusPayment = statusPayment;
+        } else if (this.statusPayment.equals(StatusPayment.PENDING) && statusPayment.equals(StatusPayment.PAID)) {
+            this.statusPayment = statusPayment;
+        } else if (this.statusPayment.equals(StatusPayment.PENDING) && statusPayment.equals(StatusPayment.DENIED)) {
+            this.statusPayment = statusPayment;
         } else {
-            throw new IllegalArgumentException("Invalid status transition, current status: " + this.paymentStatus + ", new status: " + paymentStatus);
+            throw new IllegalArgumentException("Invalid status transition, current status: " + this.statusPayment + ", new status: " + statusPayment);
         }
     }
 
@@ -44,7 +44,7 @@ public class OrderPayment {
         if (this.qrCode != null) {
             throw new IllegalArgumentException("QRCode already set");
         }
-        this.setOrderStatus(PaymentStatus.PENDING);
+        this.setStatusPayment(StatusPayment.PENDING);
         this.qrCode = qrCode;
     }
 }

@@ -1,7 +1,7 @@
 package br.com.fiap.techchallenge.payment.infrastructure.bd;
 
 import br.com.fiap.techchallenge.payment.core.usecase.entities.OrderPayment;
-import br.com.fiap.techchallenge.payment.core.usecase.entities.PaymentStatus;
+import br.com.fiap.techchallenge.payment.core.usecase.entities.StatusPayment;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -33,38 +33,38 @@ public class MySQLRepositoryTest {
 
     @Test
     void testCreatePaymentInsertsNewPayment() {
-        String orderId = "1234";
-        OrderPayment testOrderPayment = new OrderPayment(orderId, PaymentStatus.CREATED, null);
+        String idOrder = "1234";
+        OrderPayment testOrderPayment = new OrderPayment(idOrder, StatusPayment.CREATED, null);
         mySQLRepository.createPayment(testOrderPayment);
 
         when(namedParameterJdbcTemplate
                 .query(anyString(), any(MapSqlParameterSource.class), any(RowMapper.class))
         ).thenReturn(List.of(testOrderPayment));
 
-        assertEquals(PaymentStatus.CREATED, mySQLRepository.getPayment(orderId).getOrderStatus());
+        assertEquals(StatusPayment.CREATED, mySQLRepository.getPayment(idOrder).getStatusPayment());
 
     }
 
     @Test
-    void setPaymentStatusUpdatesStatus() {
-        String orderId = "1234";
+    void setStatusPaymentUpdatesStatus() {
+        String idOrder = "1234";
 
-        OrderPayment testOrderPayment = new OrderPayment(orderId, PaymentStatus.PENDING, null);
+        OrderPayment testOrderPayment = new OrderPayment(idOrder, StatusPayment.PENDING, null);
         mySQLRepository.createPayment(testOrderPayment);
-        OrderPayment testUpdatedOrderPayment = new OrderPayment(orderId, PaymentStatus.PAID, null);
+        OrderPayment testUpdatedOrderPayment = new OrderPayment(idOrder, StatusPayment.PAID, null);
         mySQLRepository.updatePayment(testUpdatedOrderPayment);
 
         when(namedParameterJdbcTemplate
                 .query(anyString(), any(MapSqlParameterSource.class), any(RowMapper.class))
         ).thenReturn(List.of(testUpdatedOrderPayment));
 
-        assertEquals(testUpdatedOrderPayment.getOrderStatus(), mySQLRepository.getPayment(testOrderPayment.getOrderId()).getOrderStatus());
+        assertEquals(testUpdatedOrderPayment.getStatusPayment(), mySQLRepository.getPayment(testOrderPayment.getIdOrder()).getStatusPayment());
     }
 
     @Test
-    void setPaymentStatusWhenPaymentIsNotFound() {
-        OrderPayment testOrderPayment = new OrderPayment("1234", PaymentStatus.PENDING, null);
+    void setStatusPaymentWhenPaymentIsNotFound() {
+        OrderPayment testOrderPayment = new OrderPayment("1234", StatusPayment.PENDING, null);
         mySQLRepository.updatePayment(testOrderPayment);
-        assertNull(mySQLRepository.getPayment(testOrderPayment.getOrderId()));
+        assertNull(mySQLRepository.getPayment(testOrderPayment.getIdOrder()));
     }
 }

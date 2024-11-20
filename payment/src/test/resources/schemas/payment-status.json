@@ -3,7 +3,7 @@
   "title": "payment-status",
   "type": "object",
   "properties": {
-    "orderStatus": {
+    "statusPayment": {
       "type": "string",
       "enum": [
           "PAID"
@@ -13,7 +13,7 @@
       ]
 
     },
-    "orderID": {
+    "idOrder": {
       "type": "string"
     }
   }

@@ -29,8 +29,8 @@ public class MessagePublisher implements IMessagePublisher {
         SendMessageRequest sendMessageStandadQueue = SendMessageRequest.builder()
                 .queueUrl(messagePublisherEnvConfig.queueUrl)
                 .messageBody('{'
-                        + "\"idOrder\": \"" + orderPayment.getOrderId() + "\","
-                        + "\"statusPayment\": \"" + orderPayment.getOrderStatus() + "\""
+                        + "\"idOrder\": \"" + orderPayment.getIdOrder() + "\","
+                        + "\"statusPayment\": \"" + orderPayment.getStatusPayment() + "\""
                         + '}')
                 .build();
 

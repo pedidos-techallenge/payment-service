@@ -42,16 +42,16 @@ public class TestQRCodeRequest {
     private Response response;
 
     @Dado("o pedido {string} não foi registrado")
-    public void orderNotFoundOnRepository(String orderId) {
+    public void orderNotFoundOnRepository(String idOrder) {
         mockRepository.clear();
-        assertNull(mockRepository.getPayment(orderId));
+        assertNull(mockRepository.getPayment(idOrder));
     }
 
     @Quando("foi solicitado o QR Code de pagamento para o pedido {string}")
-    public void getQrCode(String orderID) {
+    public void getQrCode(String idOrder) {
         sharedScenarioState.response = RestAssured
                 .given()
-                .get("v1/payment/qrCode/" + orderID);
+                .get("v1/payment/qrCode/" + idOrder);
     }
 
     @Então("o QR Code de pagamento deve ser retornado")
