@@ -59,4 +59,72 @@ curl -X POST http://localhost:8080/v1/payment/new \
      -d '{"orderId": "12345"}'
 ```
 
+# Running staging environment on AWS:
+1. Deploy staging image to dockerhub
+```
+docker buildx build . -t jubzzz/payment-service:staging
+docker push jubzzz/payment-service:staging
+```
+2. Setup env variables with aws credentials and MYSQL login
+```
+export AWS_ACCESS_KEY_ID=...
+export AWS_SECRET_ACCESS_KEY=...
+export AWS_SESSION_TOKEN=...
+export AWS_REGION=...
+export MYSQL_USERNAME=...
+export MYSQL_PASSWORD=...
+```
+3. Deploy terraform infra to AWS
+3.1 Deploy Shared infra (VPC, S3 and SQS)
+`terraform -chdir=./staging/shared init`
+`terraform -chdir=./staging/shared apply`
+3.2 Deploy the main infra (RDS and EKS)
+`terraform -chdir=./staging/clusters init`
+`terraform -chdir=./staging/clusters apply -var "MYSQL_USERNAME=${MYSQL_USERNAME}" -var "MYSQL_PASSWORD=${MYSQL_PASSWORD}"`
+3.3 Deploy and destroy the lambda for DB initialization
+`terraform -chdir=./staging/lambda-initdb init`
+`terraform -chdir=./staging/lambda-initdb apply -var "MYSQL_USERNAME=${MYSQL_USERNAME}" -var "MYSQL_PASSWORD=${MYSQL_PASSWORD}"`
+`terraform -chdir=./staging/lambda-initdb destroy -var "MYSQL_USERNAME=" -var "MYSQL_PASSWORD="`
+3.4 Deploy the API Gateway
+`terraform -chdir=./staging/api-gateway init`
+`terraform -chdir=./staging/api-gateway apply`
 
+4. Deploy the Kubernetes application
+4.1 Setup EKS config
+`aws eks update-kubeconfig --region us-east-1 --name orderpayments-eks`
+4.2 Retrieve AWS endpoints for RDS and SQS
+```
+export MYSQL_HOST=$(aws rds describe-db-instances \
+    --region=us-east-1 \
+    --db-instance-identifier \
+    techchallenge-payment-service \
+    --query 'DBInstances[0].Endpoint.Address' \
+    --output text)
+export AWS_SQS_URL=$(aws sqs get-queue-url --queue-name payment-order-main --region=us-east-1 --output text)
+```
+4.3 Apply Kubernetes deployment
+`kubectl apply -f ./staging/kubernetes/deployment.yaml`
+4.4 Set env variables for EKS deployment 
+```
+kubectl set env deployment/payment-deployment \
+    SPRING_PROFILE=prd \
+    MYSQL_HOST=$MYSQL_HOST \
+    MYSQL_PORT=3306 \
+    MYSQL_DATABSE=orderpayments \
+    MYSQL_USER=$MYSQL_USERNAME \
+    MYSQL_PASSWORD=$MYSQL_PASSWORD \
+    AWS_SQS_URL=$AWS_SQS_URL \
+    AWS_REGION=$AWS_REGION \
+    AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID \
+    AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY \
+    AWS_SESSION_TOKEN=$AWS_SESSION_TOKEN
+```
+
+5 Clean Up
+5.1 Destroy the api gateway
+`terraform -chdir=./staging/api-gateway destroy`
+5.2 Destroy the RDS and EKS clusters
+`terraform -chdir=./staging/terraform destroy -var "MYSQL_USERNAME=" -var "MYSQL_PASSWORD="`
+5.3 Destroy the shared infra
+`terraform -chdir=./staging/shared destroy`
+5.4 Destroy the Load Balancer via AWS console
