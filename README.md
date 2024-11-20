@@ -124,7 +124,7 @@ kubectl set env deployment/payment-deployment \
 6.1 Destroy the api gateway
 `terraform -chdir=./staging/api-gateway destroy`
 6.2 Destroy the RDS and EKS clusters
-`terraform -chdir=./staging/terraform destroy -var "MYSQL_USERNAME=" -var "MYSQL_PASSWORD="`
+`terraform -chdir=./staging/clusters destroy -var "MYSQL_USERNAME=" -var "MYSQL_PASSWORD="`
 6.3 Destroy the shared infra
 `terraform -chdir=./staging/shared destroy`
 6.4 Destroy the Load Balancer via AWS console
