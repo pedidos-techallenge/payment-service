@@ -4,7 +4,7 @@ import br.com.fiap.techchallenge.payment.adapters.gateways.IMessagePublisher;
 import br.com.fiap.techchallenge.payment.adapters.gateways.IPaymentGateway;
 import br.com.fiap.techchallenge.payment.adapters.gateways.IPaymentRepository;
 import br.com.fiap.techchallenge.payment.core.usecase.entities.OrderPayment;
-import br.com.fiap.techchallenge.payment.core.usecase.entities.OrderStatus;
+import br.com.fiap.techchallenge.payment.core.usecase.entities.PaymentStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -34,11 +34,11 @@ public class PaymentProcessingUseCaseTest {
 
     @Test
     void testGetPaymentStatusReturnsStatus() {
-        OrderPayment testOrderPayment = new OrderPayment("1234", OrderStatus.PENDING, null);
+        OrderPayment testOrderPayment = new OrderPayment("1234", PaymentStatus.PENDING, null);
 
         when(paymentRepository.getPayment(testOrderPayment.getOrderId())).thenReturn(testOrderPayment);
 
-        OrderStatus actualStatus = paymentProcessingUseCase.getPaymentStatus(testOrderPayment.getOrderId());
+        PaymentStatus actualStatus = paymentProcessingUseCase.getPaymentStatus(testOrderPayment.getOrderId());
 
         assertEquals(testOrderPayment.getOrderStatus(), actualStatus);
         verify(paymentRepository, times(1)).getPayment(testOrderPayment.getOrderId());
@@ -54,11 +54,11 @@ public class PaymentProcessingUseCaseTest {
 
     @Test
     void testApprovePaymentCallsCorrectMethod() {
-        OrderPayment testOrderPayment = new OrderPayment("1234", OrderStatus.PENDING, null);
+        OrderPayment testOrderPayment = new OrderPayment("1234", PaymentStatus.PENDING, null);
 
         when(paymentRepository.getPayment(testOrderPayment.getOrderId())).thenReturn(testOrderPayment);
 
-        paymentProcessingUseCase.approvePayment(testOrderPayment.getOrderId(), OrderStatus.APPROVED);
+        paymentProcessingUseCase.approvePayment(testOrderPayment.getOrderId(), PaymentStatus.PAID);
         verify(paymentRepository, times(1)).updatePayment(testOrderPayment);
     }
 
@@ -69,13 +69,13 @@ public class PaymentProcessingUseCaseTest {
 
         assertThrows(
                 RuntimeException.class
-                , () -> paymentProcessingUseCase.approvePayment(orderId, OrderStatus.APPROVED)
+                , () -> paymentProcessingUseCase.approvePayment(orderId, PaymentStatus.PAID)
         );
     }
 
     @Test
     void testGetQRCodeCallsCorrectMethods() {
-        OrderPayment testOrderPayment = new OrderPayment("1234", OrderStatus.CREATED, null);
+        OrderPayment testOrderPayment = new OrderPayment("1234", PaymentStatus.CREATED, null);
         when(paymentRepository.getPayment(testOrderPayment.getOrderId())).thenReturn(testOrderPayment);
 
         String qrCode = "123456";
@@ -89,7 +89,7 @@ public class PaymentProcessingUseCaseTest {
 
     @Test
     void testGetQRCodeReturnsExistingQRCode() {
-        OrderPayment testOrderPayment = new OrderPayment("1234", OrderStatus.PENDING, "QR_CODE_123456");
+        OrderPayment testOrderPayment = new OrderPayment("1234", PaymentStatus.PENDING, "QR_CODE_123456");
         when(paymentRepository.getPayment(testOrderPayment.getOrderId())).thenReturn(testOrderPayment);
 
         String actualQRCode = paymentProcessingUseCase.getQRCode(testOrderPayment.getOrderId());
@@ -100,7 +100,7 @@ public class PaymentProcessingUseCaseTest {
 
     @Test
     void testGetQRCodeThrowsExceptionWhenGatewayFails() {
-        OrderPayment testOrderPayment = new OrderPayment("1234", OrderStatus.CREATED, null);
+        OrderPayment testOrderPayment = new OrderPayment("1234", PaymentStatus.CREATED, null);
         when(paymentRepository.getPayment(testOrderPayment.getOrderId())).thenReturn(testOrderPayment);
 
         when(paymentRepository.getPayment(testOrderPayment.getOrderId())).thenReturn(null);

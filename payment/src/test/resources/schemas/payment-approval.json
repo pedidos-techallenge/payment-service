@@ -6,7 +6,7 @@
     "orderStatus": {
       "type": "string",
         "enum": [
-            "APPROVED"
+            "PAID"
         ]
 
     },

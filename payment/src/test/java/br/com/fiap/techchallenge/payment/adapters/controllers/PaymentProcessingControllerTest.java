@@ -1,6 +1,6 @@
 package br.com.fiap.techchallenge.payment.adapters.controllers;
 
-import br.com.fiap.techchallenge.payment.core.usecase.entities.OrderStatus;
+import br.com.fiap.techchallenge.payment.core.usecase.entities.PaymentStatus;
 import br.com.fiap.techchallenge.payment.core.usecase.in.IPaymentProcessingUseCase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,7 +10,6 @@ import org.mockito.MockitoAnnotations;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.*;
-import org.junit.jupiter.api.Assertions.*;
 
 public class PaymentProcessingControllerTest {
 
@@ -28,10 +27,10 @@ public class PaymentProcessingControllerTest {
     @Test
     void testGetPaymentStatusReturnsStatus() {
         String orderId = "1234";
-        OrderStatus expectedStatus = OrderStatus.PENDING;
+        PaymentStatus expectedStatus = PaymentStatus.PENDING;
         when(paymentProcessingUseCase.getPaymentStatus(orderId)).thenReturn(expectedStatus);
 
-        OrderStatus returnedStatus = paymentProcessingController.getPaymentStatus(orderId);
+        PaymentStatus returnedStatus = paymentProcessingController.getPaymentStatus(orderId);
 
         assertEquals(expectedStatus, returnedStatus);
         verify(paymentProcessingUseCase, times(1)).getPaymentStatus(orderId);
@@ -48,8 +47,8 @@ public class PaymentProcessingControllerTest {
     @Test
     void testApprovePaymentCallsCorrectUseCase() {
         String orderId = "1234";
-        paymentProcessingController.approvePayment(orderId, OrderStatus.APPROVED.name());
-        verify(paymentProcessingUseCase, times(1)).approvePayment(orderId, OrderStatus.APPROVED);
+        paymentProcessingController.approvePayment(orderId, PaymentStatus.PAID.name());
+        verify(paymentProcessingUseCase, times(1)).approvePayment(orderId, PaymentStatus.PAID);
     }
 
     @Test

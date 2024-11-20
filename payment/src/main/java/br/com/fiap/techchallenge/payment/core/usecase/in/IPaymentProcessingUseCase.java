@@ -1,15 +1,15 @@
 package br.com.fiap.techchallenge.payment.core.usecase.in;
 
-import br.com.fiap.techchallenge.payment.core.usecase.entities.OrderStatus;
+import br.com.fiap.techchallenge.payment.core.usecase.entities.PaymentStatus;
 
 public interface IPaymentProcessingUseCase {
 
-    OrderStatus getPaymentStatus(String orderId);
+    PaymentStatus getPaymentStatus(String orderId);
 
     void createPayment(String orderId);
 
 
-    void approvePayment(String orderId, OrderStatus orderStatus);
+    void approvePayment(String orderId, PaymentStatus paymentStatus);
 
     String getQRCode(String orderId);
 }

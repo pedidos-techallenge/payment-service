@@ -2,7 +2,7 @@ package br.com.fiap.techchallenge.payment.infrastructure.bd;
 
 import br.com.fiap.techchallenge.payment.adapters.gateways.IPaymentRepository;
 import br.com.fiap.techchallenge.payment.core.usecase.entities.OrderPayment;
-import br.com.fiap.techchallenge.payment.core.usecase.entities.OrderStatus;
+import br.com.fiap.techchallenge.payment.core.usecase.entities.PaymentStatus;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 
@@ -35,7 +35,7 @@ public class MockRepository implements IPaymentRepository {
     public OrderPayment getPayment(String orderId) {
         for (Payment payment : payments) {
             if (payment.orderId.equals(orderId)) {
-                return new OrderPayment(orderId, OrderStatus.valueOf(payment.status), payment.qrCode);
+                return new OrderPayment(orderId, PaymentStatus.valueOf(payment.status), payment.qrCode);
             }
         }
         return null;

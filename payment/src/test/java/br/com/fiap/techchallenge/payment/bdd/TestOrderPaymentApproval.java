@@ -38,18 +38,18 @@ public class TestOrderPaymentApproval {
     }
 
     @Quando("o gateway de pagamento sinalizou a aprovação da fatura do pedido {string}")
-    public void orderPaymentIsApproved(String orderId) {
+    public void orderPaymentIsPaid(String orderId) {
         RestAssured.given()
                 .contentType("application/json")
-                .body("{\"orderId\":\"" + orderId + "\",\"orderStatus\":\"APPROVED\"}")
+                .body("{\"orderId\":\"" + orderId + "\",\"orderStatus\":\"PAID\"}")
                 .post("/v1/payment/approve");
     }
 
     @Quando("o gateway de pagamento sinalizou a rejeição da fatura do pedido {string}")
-    public void orderPaymentIsRejected(String orderId) {
+    public void orderPaymentIsDenied(String orderId) {
         RestAssured.given()
                 .contentType("application/json")
-                .body("{\"orderId\":\"" + orderId + "\",\"orderStatus\":\"REJECTED\"}")
+                .body("{\"orderId\":\"" + orderId + "\",\"orderStatus\":\"DENIED\"}")
                 .post("/v1/payment/approve");
     }
 

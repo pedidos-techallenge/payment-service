@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping
 public class HealthStatus {
 
+        @SuppressWarnings("SameReturnValue")
         @RequestMapping("/health")
         public String health() {
             return "OK";

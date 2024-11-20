@@ -4,13 +4,13 @@ import br.com.fiap.techchallenge.payment.adapters.gateways.IMessagePublisher;
 import br.com.fiap.techchallenge.payment.adapters.gateways.IPaymentGateway;
 import br.com.fiap.techchallenge.payment.adapters.gateways.IPaymentRepository;
 import br.com.fiap.techchallenge.payment.core.usecase.entities.OrderPayment;
-import br.com.fiap.techchallenge.payment.core.usecase.entities.OrderStatus;
+import br.com.fiap.techchallenge.payment.core.usecase.entities.PaymentStatus;
 import br.com.fiap.techchallenge.payment.core.usecase.in.IPaymentProcessingUseCase;
 
 public class PaymentProcessingUseCase implements IPaymentProcessingUseCase {
-    IPaymentGateway paymentGateway;
-    IPaymentRepository paymentRepository;
-    IMessagePublisher messagePublisher;
+    final IPaymentGateway paymentGateway;
+    final IPaymentRepository paymentRepository;
+    final IMessagePublisher messagePublisher;
 
     public PaymentProcessingUseCase(IPaymentGateway paymentGateway
             , IPaymentRepository paymentRepository, IMessagePublisher messagePublisher) {
@@ -20,7 +20,7 @@ public class PaymentProcessingUseCase implements IPaymentProcessingUseCase {
     }
 
     @Override
-    public OrderStatus getPaymentStatus(String orderId) {
+    public PaymentStatus getPaymentStatus(String orderId) {
         if (orderId.isEmpty()) {
             throw new RuntimeException("Empty orderId provided");
         }
@@ -41,12 +41,12 @@ public class PaymentProcessingUseCase implements IPaymentProcessingUseCase {
     }
 
     @Override
-    public void approvePayment(String orderId, OrderStatus orderStatus) {
+    public void approvePayment(String orderId, PaymentStatus paymentStatus) {
         if (orderId.isEmpty()) {
             throw new RuntimeException("Empty orderId provided");
         }
         OrderPayment orderPayment = paymentRepository.getPayment(orderId);
-        orderPayment.setOrderStatus(orderStatus);
+        orderPayment.setOrderStatus(paymentStatus);
         paymentRepository.updatePayment(orderPayment);
         messagePublisher.sendMessage(orderPayment);
     }

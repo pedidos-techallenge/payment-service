@@ -1,6 +1,6 @@
 package br.com.fiap.techchallenge.payment.infrastructure.bd;
 
-import br.com.fiap.techchallenge.payment.core.usecase.entities.OrderStatus;
+import br.com.fiap.techchallenge.payment.core.usecase.entities.PaymentStatus;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.core.RowMapper;
@@ -63,7 +63,7 @@ public class MySQLRepository implements IPaymentRepository {
             public OrderPayment mapRow(@NotNull ResultSet rs, int rowNum) throws SQLException {
                 return new OrderPayment(
                     rs.getString("order_id"),
-                    OrderStatus.valueOf(rs.getString("payment_status")),
+                    PaymentStatus.valueOf(rs.getString("payment_status")),
                     rs.getString("qr_code")
                 );
             }

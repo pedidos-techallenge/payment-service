@@ -6,11 +6,8 @@ import br.com.fiap.techchallenge.payment.infrastructure.config.MessagePublisherE
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
-import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.sqs.SqsClient;
-import software.amazon.awssdk.services.sqs.model.ReceiveMessageRequest;
 import software.amazon.awssdk.services.sqs.model.SendMessageRequest;
-import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
 
 
 @Service

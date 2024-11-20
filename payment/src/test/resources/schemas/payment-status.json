@@ -6,9 +6,10 @@
     "orderStatus": {
       "type": "string",
       "enum": [
-          "APPROVED"
-        , "REJECTED"
+          "PAID"
+        , "DENIED"
         , "PENDING"
+        , "CREATED"
       ]
 
     },

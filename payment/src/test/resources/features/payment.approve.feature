@@ -6,9 +6,9 @@ Funcionalidade: Aprovação de pagamento para fatura
   Cenário: Aprovação de pagamento para fatura existente
     Dado o pedido "1234" já possui uma fatura com o status "PENDING" e o QRCode "não está" preenchido
     Quando o gateway de pagamento sinalizou a aprovação da fatura do pedido "1234"
-    Então a fatura do pedido "1234" deve ser marcada com o status "APPROVED"
+    Então a fatura do pedido "1234" deve ser marcada com o status "PAID"
 
   Cenário: Rejeição de pagamento para fatura existente
     Dado o pedido "1234" já possui uma fatura com o status "PENDING" e o QRCode "não está" preenchido
     Quando o gateway de pagamento sinalizou a rejeição da fatura do pedido "1234"
-    Então a fatura do pedido "1234" deve ser marcada com o status "REJECTED"
+    Então a fatura do pedido "1234" deve ser marcada com o status "DENIED"

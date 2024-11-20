@@ -1,7 +1,7 @@
 package br.com.fiap.techchallenge.payment.infrastructure.bd;
 
 import br.com.fiap.techchallenge.payment.core.usecase.entities.OrderPayment;
-import br.com.fiap.techchallenge.payment.core.usecase.entities.OrderStatus;
+import br.com.fiap.techchallenge.payment.core.usecase.entities.PaymentStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -34,14 +34,14 @@ public class MySQLRepositoryTest {
     @Test
     void testCreatePaymentInsertsNewPayment() {
         String orderId = "1234";
-        OrderPayment testOrderPayment = new OrderPayment(orderId, OrderStatus.CREATED, null);
+        OrderPayment testOrderPayment = new OrderPayment(orderId, PaymentStatus.CREATED, null);
         mySQLRepository.createPayment(testOrderPayment);
 
         when(namedParameterJdbcTemplate
                 .query(anyString(), any(MapSqlParameterSource.class), any(RowMapper.class))
         ).thenReturn(List.of(testOrderPayment));
 
-        assertEquals(OrderStatus.CREATED, mySQLRepository.getPayment(orderId).getOrderStatus());
+        assertEquals(PaymentStatus.CREATED, mySQLRepository.getPayment(orderId).getOrderStatus());
 
     }
 
@@ -49,9 +49,9 @@ public class MySQLRepositoryTest {
     void setPaymentStatusUpdatesStatus() {
         String orderId = "1234";
 
-        OrderPayment testOrderPayment = new OrderPayment(orderId, OrderStatus.PENDING, null);
+        OrderPayment testOrderPayment = new OrderPayment(orderId, PaymentStatus.PENDING, null);
         mySQLRepository.createPayment(testOrderPayment);
-        OrderPayment testUpdatedOrderPayment = new OrderPayment(orderId, OrderStatus.APPROVED, null);
+        OrderPayment testUpdatedOrderPayment = new OrderPayment(orderId, PaymentStatus.PAID, null);
         mySQLRepository.updatePayment(testUpdatedOrderPayment);
 
         when(namedParameterJdbcTemplate
@@ -63,7 +63,7 @@ public class MySQLRepositoryTest {
 
     @Test
     void setPaymentStatusWhenPaymentIsNotFound() {
-        OrderPayment testOrderPayment = new OrderPayment("1234", OrderStatus.PENDING, null);
+        OrderPayment testOrderPayment = new OrderPayment("1234", PaymentStatus.PENDING, null);
         mySQLRepository.updatePayment(testOrderPayment);
         assertNull(mySQLRepository.getPayment(testOrderPayment.getOrderId()));
     }

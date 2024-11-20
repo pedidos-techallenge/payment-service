@@ -1,7 +1,7 @@
 package br.com.fiap.techchallenge.payment.infrastructure.api;
 
 import br.com.fiap.techchallenge.payment.adapters.controllers.PaymentProcessingController;
-import br.com.fiap.techchallenge.payment.core.usecase.entities.OrderStatus;
+import br.com.fiap.techchallenge.payment.core.usecase.entities.PaymentStatus;
 import br.com.fiap.techchallenge.payment.infrastructure.dto.OrderRequestDTO;
 import br.com.fiap.techchallenge.payment.infrastructure.dto.PaymentStatusDTO;
 import br.com.fiap.techchallenge.payment.infrastructure.dto.QRCodeResponseDTO;
@@ -52,24 +52,24 @@ public class PaymentProcessingServiceTest {
     @Test
     void testApprovePaymentReturnsOKWhenSucessfull() {
         String orderId = "1234";
-        OrderRequestDTO orderRequestDTO = new OrderRequestDTO(orderId, OrderStatus.APPROVED.name());
+        OrderRequestDTO orderRequestDTO = new OrderRequestDTO(orderId, PaymentStatus.PAID.name());
 
         int responseStatus = paymentProcessingService.approvePayment(orderRequestDTO).getStatusCode().value();
 
         assertEquals(200, responseStatus);
-        verify(paymentProcessingController, times(1)).approvePayment(orderId, OrderStatus.APPROVED.name());
+        verify(paymentProcessingController, times(1)).approvePayment(orderId, PaymentStatus.PAID.name());
     }
 
     @Test
     void testApprovePaymentReturns500WhenUnsucessfull() {
         String orderId = "1234";
-        OrderRequestDTO orderRequestDTO = new OrderRequestDTO(orderId, OrderStatus.APPROVED.name());
+        OrderRequestDTO orderRequestDTO = new OrderRequestDTO(orderId, PaymentStatus.PAID.name());
 
-        doThrow(new RuntimeException()).when(paymentProcessingController).approvePayment(orderId, OrderStatus.APPROVED.name());
+        doThrow(new RuntimeException()).when(paymentProcessingController).approvePayment(orderId, PaymentStatus.PAID.name());
         int responseStatus = paymentProcessingService.approvePayment(orderRequestDTO).getStatusCode().value();
 
         assertEquals(500, responseStatus);
-        verify(paymentProcessingController, times(1)).approvePayment(orderId, OrderStatus.APPROVED.name());
+        verify(paymentProcessingController, times(1)).approvePayment(orderId, PaymentStatus.PAID.name());
     }
 
     @Test
@@ -126,10 +126,10 @@ public class PaymentProcessingServiceTest {
     @Test
     void testGetPaymentStatusReturnsStatusSuccessfully() {
         String orderId = "1234";
-        when(paymentProcessingController.getPaymentStatus(orderId)).thenReturn(OrderStatus.PENDING);
+        when(paymentProcessingController.getPaymentStatus(orderId)).thenReturn(PaymentStatus.PENDING);
         PaymentStatusDTO paymentStatus = (PaymentStatusDTO) paymentProcessingService.getPaymentStatus(orderId).getBody();
         assertEquals(paymentStatus.orderId(), orderId);
-        assertEquals(paymentStatus.orderStatus(), OrderStatus.PENDING.name());
+        assertEquals(paymentStatus.orderStatus(), PaymentStatus.PENDING.name());
     }
 
     @Test
