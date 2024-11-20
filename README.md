@@ -85,9 +85,6 @@ export MYSQL_PASSWORD=...
 `terraform -chdir=./staging/lambda-initdb init`
 `terraform -chdir=./staging/lambda-initdb apply -var "MYSQL_USERNAME=${MYSQL_USERNAME}" -var "MYSQL_PASSWORD=${MYSQL_PASSWORD}"`
 `terraform -chdir=./staging/lambda-initdb destroy -var "MYSQL_USERNAME=" -var "MYSQL_PASSWORD="`
-3.4 Deploy the API Gateway
-`terraform -chdir=./staging/api-gateway init`
-`terraform -chdir=./staging/api-gateway apply`
 
 4. Deploy the Kubernetes application
 4.1 Setup EKS config
@@ -119,12 +116,15 @@ kubectl set env deployment/payment-deployment \
     AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY \
     AWS_SESSION_TOKEN=$AWS_SESSION_TOKEN
 ```
+5 Deploy the API Gateway
+`terraform -chdir=./staging/api-gateway init`
+`terraform -chdir=./staging/api-gateway apply`
 
-5 Clean Up
-5.1 Destroy the api gateway
+6 Clean Up
+6.1 Destroy the api gateway
 `terraform -chdir=./staging/api-gateway destroy`
-5.2 Destroy the RDS and EKS clusters
+6.2 Destroy the RDS and EKS clusters
 `terraform -chdir=./staging/terraform destroy -var "MYSQL_USERNAME=" -var "MYSQL_PASSWORD="`
-5.3 Destroy the shared infra
+6.3 Destroy the shared infra
 `terraform -chdir=./staging/shared destroy`
-5.4 Destroy the Load Balancer via AWS console
+6.4 Destroy the Load Balancer via AWS console
