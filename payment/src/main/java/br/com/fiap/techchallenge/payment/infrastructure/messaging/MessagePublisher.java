@@ -11,6 +11,7 @@ import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.sqs.SqsClient;
 import software.amazon.awssdk.services.sqs.model.MessageAttributeValue;
 import software.amazon.awssdk.services.sqs.model.SendMessageRequest;
+import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,7 +29,7 @@ public class MessagePublisher implements IMessagePublisher {
         this.messagePublisherEnvConfig = new MessagePublisherEnvConfig();
         sqsClient = SqsClient.builder()
                 .region(Region.of(messagePublisherEnvConfig.awsRegion))
-                .credentialsProvider(EnvironmentVariableCredentialsProvider.create())
+                .credentialsProvider(DefaultCredentialsProvider.create())
                 .build();
     }
 
