@@ -46,6 +46,7 @@ public class PaymentProcessingService {
             }
             return new ResponseEntity<>(new QRCodeResponseDTO(orderId, qrCode), HttpStatus.OK);
         } catch (RuntimeException e) {
+            System.out.println(e.getMessage());
             if (e.getMessage() != null) {
                 if (e.getMessage().equals("Order not found")) {
                     return new ResponseEntity<>("Pedido não encontrado", HttpStatus.NOT_FOUND);
@@ -61,7 +62,7 @@ public class PaymentProcessingService {
             this.paymentProcessingController.approvePayment(orderRequest.orderId(), orderRequest.orderStatus());
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (RuntimeException e) {
-            // TODO: Catch invalid transition
+            System.out.println(e.getMessage());
             return new ResponseEntity<>("Erro ao aprovar pagamento", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -75,6 +76,7 @@ public class PaymentProcessingService {
             }
             return new ResponseEntity<>(new PaymentStatusDTO(orderId, paymentStatus.name()), HttpStatus.OK);
         } catch (RuntimeException e) {
+            System.out.println(e.getMessage());
             return new ResponseEntity<>("Erro ao buscar status de pagamento", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
