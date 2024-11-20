@@ -7,5 +7,5 @@ public interface IPaymentRepository {
 
     void updatePayment(OrderPayment orderPayment);
 
-    OrderPayment getPayment(String orderId);
+    OrderPayment getPayment(String idOrder);
 }

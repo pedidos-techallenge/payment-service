@@ -1,55 +1,55 @@
 package br.com.fiap.techchallenge.payment.core.entities;
 
 import br.com.fiap.techchallenge.payment.core.usecase.entities.OrderPayment;
-import br.com.fiap.techchallenge.payment.core.usecase.entities.OrderStatus;
+import br.com.fiap.techchallenge.payment.core.usecase.entities.StatusPayment;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class OrderPaymentTest {
 
-    // setOrderStatus
+    // setStatusPayment
     @Test
-    public void testSettingOrderStatusFromCreatedToPending() {
+    public void testSettingStatusPaymentFromCreatedToPending() {
         OrderPayment orderPayment = new OrderPayment("1234");
-        orderPayment.setOrderStatus(OrderStatus.PENDING);
+        orderPayment.setStatusPayment(StatusPayment.PENDING);
 
-        assertEquals(OrderStatus.PENDING, orderPayment.getOrderStatus());
+        assertEquals(StatusPayment.PENDING, orderPayment.getStatusPayment());
     }
 
     @Test
-    public void testSettingOrderStatusFromPendingToApproved() {
-        OrderPayment orderPayment = new OrderPayment("1234", OrderStatus.PENDING, null);
-        orderPayment.setOrderStatus(OrderStatus.APPROVED);
+    public void testSettingStatusPaymentFromPendingToPaid() {
+        OrderPayment orderPayment = new OrderPayment("1234", StatusPayment.PENDING, null);
+        orderPayment.setStatusPayment(StatusPayment.PAID);
 
-        assertEquals(OrderStatus.APPROVED, orderPayment.getOrderStatus());
+        assertEquals(StatusPayment.PAID, orderPayment.getStatusPayment());
     }
 
     @Test
-    public void testSettingOrderStatusFromPendingToRejected() {
-        OrderPayment orderPayment = new OrderPayment("1234", OrderStatus.PENDING, null);
-        orderPayment.setOrderStatus(OrderStatus.REJECTED);
+    public void testSettingStatusPaymentFromPendingToDenied() {
+        OrderPayment orderPayment = new OrderPayment("1234", StatusPayment.PENDING, null);
+        orderPayment.setStatusPayment(StatusPayment.DENIED);
 
-        assertEquals(OrderStatus.REJECTED, orderPayment.getOrderStatus());
+        assertEquals(StatusPayment.DENIED, orderPayment.getStatusPayment());
     }
 
     @Test
-    public void testSettingOrderStatusFromCreatedToRejected() {
+    public void testSettingStatusPaymentFromCreatedToDenied() {
         OrderPayment orderPayment = new OrderPayment("1234");
         try {
-            orderPayment.setOrderStatus(OrderStatus.REJECTED);
+            orderPayment.setStatusPayment(StatusPayment.DENIED);
         } catch (IllegalArgumentException e) {
-            assertEquals("Invalid status transition, current status: CREATED, new status: REJECTED", e.getMessage());
+            assertEquals("Invalid status transition, current status: CREATED, new status: DENIED", e.getMessage());
         }
     }
 
     @Test
-    public void testSettingOrderStatusFromApprovedToRejected() {
-        OrderPayment orderPayment = new OrderPayment("1234", OrderStatus.APPROVED, null);
+    public void testSettingStatusPaymentFromPaidToDenied() {
+        OrderPayment orderPayment = new OrderPayment("1234", StatusPayment.PAID, null);
         try {
-            orderPayment.setOrderStatus(OrderStatus.REJECTED);
+            orderPayment.setStatusPayment(StatusPayment.DENIED);
         } catch (IllegalArgumentException e) {
-            assertEquals("Invalid status transition, current status: APPROVED, new status: REJECTED", e.getMessage());
+            assertEquals("Invalid status transition, current status: PAID, new status: DENIED", e.getMessage());
         }
     }
 
@@ -61,7 +61,7 @@ public class OrderPaymentTest {
         orderPayment.setQrCode("QR_CODE_1234567");
 
         assertEquals("QR_CODE_1234567", orderPayment.getQrCode());
-        assertEquals(OrderStatus.PENDING, orderPayment.getOrderStatus());
+        assertEquals(StatusPayment.PENDING, orderPayment.getStatusPayment());
     }
 
     @Test

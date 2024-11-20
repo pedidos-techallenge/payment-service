@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class LocalPaymentGateway implements IPaymentGateway {
     @Override
-    public String processQRCodePayment(String orderId) {
+    public String processQRCodePayment(String idOrder) {
         return "QR_CODE=12345_67890";
     }
 }

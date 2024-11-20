@@ -2,7 +2,7 @@
   <configuration default="false" name="Main" type="Application" factoryName="Application">
     <option name="MAIN_CLASS_NAME" value="br.com.fiap.techchallenge.payment.Main" />
     <module name="payment" />
-    <option name="VM_PARAMETERS" value="-Dspring.profiles.active=prd" />
+    <option name="VM_PARAMETERS" value="-Dspring.profiles.active=local" />
     <method v="2">
       <option name="Make" enabled="true" />
     </method>

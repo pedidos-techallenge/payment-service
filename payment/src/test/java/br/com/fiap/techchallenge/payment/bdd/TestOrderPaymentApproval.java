@@ -38,29 +38,29 @@ public class TestOrderPaymentApproval {
     }
 
     @Quando("o gateway de pagamento sinalizou a aprovação da fatura do pedido {string}")
-    public void orderPaymentIsApproved(String orderId) {
+    public void orderPaymentIsPaid(String idOrder) {
         RestAssured.given()
                 .contentType("application/json")
-                .body("{\"orderId\":\"" + orderId + "\",\"orderStatus\":\"APPROVED\"}")
+                .body("{\"idOrder\":\"" + idOrder + "\",\"statusPayment\":\"PAID\"}")
                 .post("/v1/payment/approve");
     }
 
     @Quando("o gateway de pagamento sinalizou a rejeição da fatura do pedido {string}")
-    public void orderPaymentIsRejected(String orderId) {
+    public void orderPaymentIsDenied(String idOrder) {
         RestAssured.given()
                 .contentType("application/json")
-                .body("{\"orderId\":\"" + orderId + "\",\"orderStatus\":\"REJECTED\"}")
+                .body("{\"idOrder\":\"" + idOrder + "\",\"statusPayment\":\"DENIED\"}")
                 .post("/v1/payment/approve");
     }
 
     @Então("a fatura do pedido {string} deve ser marcada com o status {string}")
-    public void orderPaymentChangeStatus(String orderId, String expectedOrderStatus) {
-        String actualOrderStatus = RestAssured.given()
-                .get("/v1/payment/status/" + orderId)
+    public void orderPaymentChangeStatus(String idOrder, String expectedStatusPayment) {
+        String actualStatusPayment = RestAssured.given()
+                .get("/v1/payment/status/" + idOrder)
                 .then()
                 .extract()
-                .path("orderStatus");
-        assertEquals(expectedOrderStatus, actualOrderStatus);
+                .path("statusPayment");
+        assertEquals(expectedStatusPayment, actualStatusPayment);
     }
 
 }

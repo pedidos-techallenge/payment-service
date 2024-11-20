@@ -2,7 +2,7 @@ package br.com.fiap.techchallenge.payment.infrastructure.bd;
 
 import br.com.fiap.techchallenge.payment.adapters.gateways.IPaymentRepository;
 import br.com.fiap.techchallenge.payment.core.usecase.entities.OrderPayment;
-import br.com.fiap.techchallenge.payment.core.usecase.entities.OrderStatus;
+import br.com.fiap.techchallenge.payment.core.usecase.entities.StatusPayment;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 
@@ -15,27 +15,27 @@ public class MockRepository implements IPaymentRepository {
 
     private ArrayList<Payment> payments = new ArrayList<>();
 
-    private record Payment(String orderId, String status, String qrCode) {}
+    private record Payment(String idOrder, String status, String qrCode) {}
 
     @Override
     public void createPayment(OrderPayment orderPayment){
-        payments.add(new Payment(orderPayment.getOrderId(), orderPayment.getOrderStatus().name(), orderPayment.getQrCode()));
+        payments.add(new Payment(orderPayment.getIdOrder(), orderPayment.getStatusPayment().name(), orderPayment.getQrCode()));
     }
 
     @Override
     public void updatePayment(OrderPayment orderPayment) {
         for (int i = 0; i < payments.size(); i++) {
-            if (payments.get(i).orderId.equals(orderPayment.getOrderId())) {
-                payments.set(i, new Payment(orderPayment.getOrderId(), orderPayment.getOrderStatus().name(), orderPayment.getQrCode()));
+            if (payments.get(i).idOrder.equals(orderPayment.getIdOrder())) {
+                payments.set(i, new Payment(orderPayment.getIdOrder(), orderPayment.getStatusPayment().name(), orderPayment.getQrCode()));
             }
         }
     }
 
     @Override
-    public OrderPayment getPayment(String orderId) {
+    public OrderPayment getPayment(String idOrder) {
         for (Payment payment : payments) {
-            if (payment.orderId.equals(orderId)) {
-                return new OrderPayment(orderId, OrderStatus.valueOf(payment.status), payment.qrCode);
+            if (payment.idOrder.equals(idOrder)) {
+                return new OrderPayment(idOrder, StatusPayment.valueOf(payment.status), payment.qrCode);
             }
         }
         return null;

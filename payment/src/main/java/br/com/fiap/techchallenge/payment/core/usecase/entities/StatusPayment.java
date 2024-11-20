@@ -1,8 +1,8 @@
 package br.com.fiap.techchallenge.payment.core.usecase.entities;
 
-public enum OrderStatus {
+public enum StatusPayment {
     CREATED,
     PENDING,
-    APPROVED,
-    REJECTED
+    PAID,
+    DENIED
 }

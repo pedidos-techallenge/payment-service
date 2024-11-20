@@ -1,9 +1,9 @@
 package br.com.fiap.techchallenge.payment.infrastructure.api;
 
 import br.com.fiap.techchallenge.payment.adapters.controllers.PaymentProcessingController;
-import br.com.fiap.techchallenge.payment.core.usecase.entities.OrderStatus;
+import br.com.fiap.techchallenge.payment.core.usecase.entities.StatusPayment;
 import br.com.fiap.techchallenge.payment.infrastructure.dto.OrderRequestDTO;
-import br.com.fiap.techchallenge.payment.infrastructure.dto.PaymentStatusDTO;
+import br.com.fiap.techchallenge.payment.infrastructure.dto.StatusPaymentDTO;
 import br.com.fiap.techchallenge.payment.infrastructure.dto.QRCodeResponseDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("v1/payment")
 public class PaymentProcessingService {
-    PaymentProcessingController paymentProcessingController;
+    final PaymentProcessingController paymentProcessingController;
 
 
     public PaymentProcessingService(PaymentProcessingController paymentProcessingController) {
@@ -22,14 +22,14 @@ public class PaymentProcessingService {
     @PostMapping("new")
     public ResponseEntity<?> createPayment(@RequestBody OrderRequestDTO orderRequest) {
         try {
-            this.paymentProcessingController.createPayment(orderRequest.orderId());
+            this.paymentProcessingController.createPayment(orderRequest.idOrder());
             return new ResponseEntity<>("Fatura gerada com sucesso", HttpStatus.OK);
         } catch (RuntimeException e) {
             System.out.println(e.getMessage());
             if (e.getMessage() != null) {
                 if (e.getMessage().equals("Order already has a payment")) {
                     return new ResponseEntity<>("Pedido já possui uma fatura", HttpStatus.BAD_REQUEST);
-                } else if (e.getMessage().equals("Empty orderId provided")) {
+                } else if (e.getMessage().equals("Empty idOrder provided")) {
                     return new ResponseEntity<>("Número de pedido vazio", HttpStatus.BAD_REQUEST);
                 }
             }
@@ -37,15 +37,16 @@ public class PaymentProcessingService {
         }
     }
 
-    @GetMapping("qrCode/{orderId}")
-    public ResponseEntity<?> getQRCode(@PathVariable String orderId) {
+    @GetMapping("qrCode/{idOrder}")
+    public ResponseEntity<?> getQRCode(@PathVariable String idOrder) {
         try {
-            String qrCode = this.paymentProcessingController.getQRCode(orderId);
+            String qrCode = this.paymentProcessingController.getQRCode(idOrder);
             if (qrCode == null) {
                 return new ResponseEntity<>("Código de pagamento não encontrado", HttpStatus.NOT_FOUND);
             }
-            return new ResponseEntity<>(new QRCodeResponseDTO(orderId, qrCode), HttpStatus.OK);
+            return new ResponseEntity<>(new QRCodeResponseDTO(idOrder, qrCode), HttpStatus.OK);
         } catch (RuntimeException e) {
+            System.out.println(e.getMessage());
             if (e.getMessage() != null) {
                 if (e.getMessage().equals("Order not found")) {
                     return new ResponseEntity<>("Pedido não encontrado", HttpStatus.NOT_FOUND);
@@ -58,23 +59,24 @@ public class PaymentProcessingService {
     @PostMapping("approve")
     public ResponseEntity<?> approvePayment(@RequestBody OrderRequestDTO orderRequest) {
         try {
-            this.paymentProcessingController.approvePayment(orderRequest.orderId(), orderRequest.orderStatus());
+            this.paymentProcessingController.approvePayment(orderRequest.idOrder(), orderRequest.statusPayment());
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (RuntimeException e) {
-            // TODO: Catch invalid transition
+            System.out.println(e.getMessage());
             return new ResponseEntity<>("Erro ao aprovar pagamento", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    @GetMapping("status/{orderId}")
-    public ResponseEntity<?> getPaymentStatus(@PathVariable String orderId) {
+    @GetMapping("status/{idOrder}")
+    public ResponseEntity<?> getStatusPayment(@PathVariable String idOrder) {
         try {
-            OrderStatus paymentStatus = this.paymentProcessingController.getPaymentStatus(orderId);
-            if (paymentStatus == null) {
+            StatusPayment statusPayment = this.paymentProcessingController.getStatusPayment(idOrder);
+            if (statusPayment == null) {
                 return new ResponseEntity<>("Ordem de pagamento não encontrada", HttpStatus.NOT_FOUND);
             }
-            return new ResponseEntity<>(new PaymentStatusDTO(orderId, paymentStatus.name()), HttpStatus.OK);
+            return new ResponseEntity<>(new StatusPaymentDTO(idOrder, statusPayment.name()), HttpStatus.OK);
         } catch (RuntimeException e) {
+            System.out.println(e.getMessage());
             return new ResponseEntity<>("Erro ao buscar status de pagamento", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

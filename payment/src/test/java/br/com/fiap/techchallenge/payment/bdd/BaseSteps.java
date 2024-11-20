@@ -2,7 +2,7 @@ package br.com.fiap.techchallenge.payment.bdd;
 
 import br.com.fiap.techchallenge.payment.bdd.config.SharedScenarioState;
 import br.com.fiap.techchallenge.payment.core.usecase.entities.OrderPayment;
-import br.com.fiap.techchallenge.payment.core.usecase.entities.OrderStatus;
+import br.com.fiap.techchallenge.payment.core.usecase.entities.StatusPayment;
 import br.com.fiap.techchallenge.payment.infrastructure.bd.MockRepository;
 import io.cucumber.java.Before;
 import io.cucumber.java.pt.Dado;
@@ -34,9 +34,9 @@ public class BaseSteps {
     }
 
     @Dado("o pedido {string} já possui uma fatura com o status {string} e o QRCode {string} preenchido")
-    public void orderHasPayment(String orderId, String orderStatus, String qrCodeStatus) {
+    public void orderHasPayment(String idOrder, String statusPayment, String qrCodeStatus) {
         String qrCode = qrCodeStatus.equals("está") ? "QR_123456" : null;
-        this.mockRepository.createPayment(new OrderPayment(orderId, OrderStatus.valueOf(orderStatus), qrCode));
+        this.mockRepository.createPayment(new OrderPayment(idOrder, StatusPayment.valueOf(statusPayment), qrCode));
     }
 
     @Então("é retornado a mensagem {string} com código {int}")

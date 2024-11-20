@@ -9,8 +9,8 @@ public class LocalPaymentGatewayTest {
     @Test
     void processQRCodePaymentReturnsvalue() {
         LocalPaymentGateway localPaymentGateway = new LocalPaymentGateway();
-        String orderId = "order123";
-        String qrCode = localPaymentGateway.processQRCodePayment(orderId);
+        String idOrder = "order123";
+        String qrCode = localPaymentGateway.processQRCodePayment(idOrder);
         assertEquals("QR_CODE=12345_67890", qrCode);
     }
 }

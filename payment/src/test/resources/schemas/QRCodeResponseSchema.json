@@ -6,7 +6,7 @@
     "qrCode": {
       "type": "string"
     },
-    "orderID": {
+    "idOrder": {
       "type": "string"
     }
   }

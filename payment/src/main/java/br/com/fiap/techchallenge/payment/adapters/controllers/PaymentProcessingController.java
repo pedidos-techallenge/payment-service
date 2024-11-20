@@ -1,28 +1,28 @@
 package br.com.fiap.techchallenge.payment.adapters.controllers;
 
-import br.com.fiap.techchallenge.payment.core.usecase.entities.OrderStatus;
+import br.com.fiap.techchallenge.payment.core.usecase.entities.StatusPayment;
 import br.com.fiap.techchallenge.payment.core.usecase.in.IPaymentProcessingUseCase;
 
 public class PaymentProcessingController {
-    IPaymentProcessingUseCase paymentProcessingUseCase;
+    final IPaymentProcessingUseCase paymentProcessingUseCase;
 
     public PaymentProcessingController(IPaymentProcessingUseCase paymentProcessingUseCase) {
         this.paymentProcessingUseCase = paymentProcessingUseCase;
     }
 
-    public OrderStatus getPaymentStatus(String orderId) {
-        return this.paymentProcessingUseCase.getPaymentStatus(orderId);
+    public StatusPayment getStatusPayment(String idOrder) {
+        return this.paymentProcessingUseCase.getStatusPayment(idOrder);
     }
 
-    public void createPayment(String orderId) {
-        paymentProcessingUseCase.createPayment(orderId);
+    public void createPayment(String idOrder) {
+        paymentProcessingUseCase.createPayment(idOrder);
     }
 
-    public void approvePayment(String orderId, String orderStatus) {
-        paymentProcessingUseCase.approvePayment(orderId, OrderStatus.valueOf(orderStatus));
+    public void approvePayment(String idOrder, String statusPayment) {
+        paymentProcessingUseCase.approvePayment(idOrder, StatusPayment.valueOf(statusPayment));
     }
 
-    public String getQRCode(String orderId) {
-        return paymentProcessingUseCase.getQRCode(orderId);
+    public String getQRCode(String idOrder) {
+        return paymentProcessingUseCase.getQRCode(idOrder);
     }
 }
