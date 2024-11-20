@@ -30,13 +30,19 @@ jobs:
               --db-instance-identifier techchallenge-payment-service \
               --query 'DBInstances[0].Endpoint.Address' \
               --output text)
+          export AWS_SQS_URL=$(aws sqs get-queue-url --queue-name payment-order-main --region=us-east-1 --output text)
           kubectl set env deployment/payment-deployment \
               SPRING_PROFILE=prd \
               MYSQL_HOST=$MYSQL_HOST \
               MYSQL_PORT=3306 \
               MYSQL_DATABASE=orderpayments \
               MYSQL_USER=$MYSQL_USERNAME \
-              MYSQL_PASSWORD=$MYSQL_PASSWORD
+              MYSQL_PASSWORD=$MYSQL_PASSWORD \
+              AWS_SQS_URL=$AWS_SQS_URL \
+              AWS_REGION=$AWS_REGION \
+              AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID \
+              AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY \
+              AWS_SESSION_TOKEN=$AWS_SESSION_TOKEN
 
       ## Deploy the API Gateway for exposing the service
       - name: setup-terraform
