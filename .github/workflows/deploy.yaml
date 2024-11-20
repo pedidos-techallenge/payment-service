@@ -37,3 +37,13 @@ jobs:
               MYSQL_DATABASE=orderpayments \
               MYSQL_USER=$MYSQL_USERNAME \
               MYSQL_PASSWORD=$MYSQL_PASSWORD
+
+      ## Deploy the API Gateway for exposing the service
+      - name: setup-terraform
+        uses: hashicorp/setup-terraform@v1
+
+      - name: terraform-init-api-gateway
+        run: terraform -chdir=./production/api-gateway init
+
+      - name: terraform-apply-api-gateway
+        run: terraform -chdir=./production/api-gateway apply -auto-approve

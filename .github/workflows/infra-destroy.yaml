@@ -23,7 +23,14 @@ jobs:
       - name: setup-terraform
         uses: hashicorp/setup-terraform@v1
 
-      # Deploy the eks cluster and rds instance
+      # Destroy the api gateway
+      - name: terraform-init-api-gateway
+        run: terraform -chdir=./production/api-gateway init
+
+      - name: terraform-destroy-api-gateway
+        run: terraform -chdir=./production/api-gateway destroy -auto-approve
+
+      # Destroy the eks cluster and rds instance
       - name: terraform-init-eks-rds
         run: terraform -chdir=./production/terraform init
 
