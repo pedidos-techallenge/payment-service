@@ -2,7 +2,7 @@ terraform {
   backend "s3" {
     bucket = "techchallenge-orderpayments-bucket" 
     region = "us-east-1"
-    key    = "lambda-initdb.tfstate"
+    key    = "payment.lambda-initdb.tfstate"
   }
 }
 
