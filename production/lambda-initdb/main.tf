@@ -1,6 +1,6 @@
 terraform {
   backend "s3" {
-    bucket = "techchallenge-orderpayments-bucket" 
+    bucket = "techchallenge-orderpayments-bucket-2" 
     region = "us-east-1"
     key    = "payment.lambda-initdb.tfstate"
   }

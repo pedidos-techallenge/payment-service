@@ -52,7 +52,7 @@ resource "aws_api_gateway_resource" "application_resource" {
 
 # Bucket
 resource "aws_s3_bucket" "bucket" {
-  bucket = "techchallenge-orderpayments-bucket"
+  bucket = "techchallenge-orderpayments-bucket-2"
   acl    = "private"
   force_destroy = true
 }
