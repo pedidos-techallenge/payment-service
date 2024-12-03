@@ -2,7 +2,7 @@ terraform {
   backend "s3" {
     bucket = "techchallenge-orderpayments-bucket"    
     region = "us-east-1"
-    key    = "mysql.staging.tfstate"
+    key    = "payment.infra.staging.tfstate"
   }
 }
 
