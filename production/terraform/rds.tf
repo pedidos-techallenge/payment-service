@@ -14,7 +14,7 @@ data "aws_subnets" "private" {
 
 # RDS subnets must be in a sg group
 resource "aws_db_subnet_group" "rds_subnets" {
-  name       = "rds_subnets"
+  name       = "rds_subnets-payment"
   subnet_ids = data.aws_subnets.private.ids
 }
 

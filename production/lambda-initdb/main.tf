@@ -40,5 +40,5 @@ data "aws_db_instance" "rds_db" {
 }
 
 data "aws_security_group" "lambda-rds-sg" {
-  name = "lambda-rds-sg"
+  name = "lambda-rds-sg-payment"
 }

@@ -13,7 +13,7 @@ resource "aws_apigatewayv2_stage" "v1" {
 
 
 resource "aws_security_group" "vpc_link" {
-  name   = "vpc-link"
+  name   = "vpc-link-payment"
   vpc_id = data.aws_vpc.techchallenge-vpc.id
 
   egress {

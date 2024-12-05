@@ -3,7 +3,7 @@
 ### EKS Security Group
 # Security group for RDS
 resource "aws_security_group" "rds-eks-sg" {
-  name   = "rds-eks-sg"
+  name   = "rds-eks-sg-payment"
   vpc_id = data.aws_vpc.techchallenge-vpc.id
 }
 
@@ -20,12 +20,12 @@ resource "aws_security_group_rule" "rds-eks-sgr" {
 ### Lambda (initdb) Security Group
 # Security group for tunneling communication from Lambda to RDS
 resource "aws_security_group" "rds-lambda-sg" {
-  name   = "rds-lambda-sg"
+  name   = "rds-lambda-sg-payment"
   vpc_id = data.aws_vpc.techchallenge-vpc.id
 }
 
 resource "aws_security_group" "lambda-rds-sg" {
-  name   = "lambda-rds-sg"
+  name   = "lambda-rds-sg-payment"
   vpc_id = data.aws_vpc.techchallenge-vpc.id
 }
 
